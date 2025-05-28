@@ -1,0 +1,102 @@
+## Build Folders ##
+bin/
+obj/
+
+## User-specific files ##
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+## Mono Auto Generated Files ##
+mono_crash.*
+
+## Visual Studio working folder ##
+.vs/
+
+## Rider IDE ##
+.idea/
+
+## ASP.NET Scaffolding ##
+ScaffoldingReadMe.txt
+
+## DotCover ##
+*.dotCover
+
+## Visual Studio Code ##
+.vscode/
+.history/
+
+## Logs ##
+*.log
+
+## NCrunch ##
+*.ncrunch*
+.*ncrunchproject
+
+## Resharper ##
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+## Dotnet watch ##
+**/tmp/
+
+## NuGet Packages ##
+*.nupkg
+*.snupkg
+*.nuspec
+*.psmdcp
+packages/
+project.lock.json
+project.fragment.lock.json
+
+# Uncomment if using NuGet < 3
+# *.nupkg
+
+# ASP.NET Core #
+wwwroot/
+node_modules/
+bower_components/
+*.db
+*.sqlite
+
+# Entity Framework #
+Migrations/
+
+# Others #
+*.dbmdl
+*.bak
+*.sql
+*.pdb
+*.cache
+*.pidb
+*.svclog
+*.sdf
+*.ldf
+*.mdf
+
+# Docker #
+**/Dockerfile
+**/docker-compose*
+
+# Test Results #
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.testsettings
+*.vsmdi
+*.vsp
+*.vspx
+*.appx
+*.appxbundle
+
+# JetBrains Rider #
+.idea/
+
+# Secrets and config
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.local.json

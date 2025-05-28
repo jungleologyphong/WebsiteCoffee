@@ -1,0 +1,174 @@
+﻿@model Order
+@using WebsiteCoffeeShop.Models
+
+@{
+    var cartItems = ViewData["CartItems"] as List<CartItem>;
+}
+
+<div class="container mt-5">
+    <div class="checkout-card">
+        <h2 class="text-center text-white checkout-title">🛒 Thanh toán đơn hàng</h2>
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <!-- Hiển thị danh sách sản phẩm -->
+        <h4 class="section-title">🛍 Sản phẩm của bạn:</h4>
+        <div class="table-responsive">
+            <table class="table table-striped checkout-table">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Hình ảnh</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Tổng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (cartItems != null && cartItems.Any())
+                    {
+                        @foreach (var item in cartItems)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>
+                                    @{
+                                        var imagePath = item.ImageUrl.StartsWith("/Images/") ? item.ImageUrl : Url.Content("~/Images/" + item.ImageUrl);
+                                    }
+                                    <img src="@imagePath" class="product-img" alt="@item.Name">
+                                </td>
+                                <td>@item.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</td>
+                                <td>@item.Quantity</td>
+                                <td class="fw-bold text-danger">@((item.Price * item.Quantity).ToString("C", new System.Globalization.CultureInfo("vi-VN")))</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-danger fw-bold">Giỏ hàng trống!</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Form nhập thông tin -->
+        <form asp-action="Checkout" asp-controller="ShoppingCart" method="post">
+            <h4 class="section-title">📌 Thông tin giao hàng:</h4>
+
+            <div class="input-group mb-3">
+                <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
+                <input type="text" name="ShippingAddress" class="form-control" placeholder="Nhập địa chỉ giao hàng" required>
+            </div>
+
+            <div class="input-group mb-3">
+                <span class="input-group-text"><i class="bi bi-chat-left-text-fill"></i></span>
+                <textarea name="Notes" class="form-control" placeholder="Ghi chú thêm (nếu có)" rows="2"></textarea>
+            </div>
+
+            <h4 class="section-title">💰 Thanh toán:</h4>
+            <div class="total-amount">
+                Tổng tiền: <span>@((cartItems != null) ? cartItems.Sum(i => i.Price * i.Quantity).ToString("#,##0") : "0") đ</span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">💳 Phương thức thanh toán:</label>
+                <select name="PaymentMethod" class="form-select">
+                    <option value="COD">📦 Thanh toán khi nhận hàng (COD)</option>
+                    <option value="BankTransfer">🏦 Chuyển khoản ngân hàng</option>
+                    <option value="VNPAY">🏦 Thanh toán VNPAY</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg w-100 fw-bold">✅ Xác nhận đơn hàng</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .checkout-card {
+        max-width: 850px;
+        margin: auto;
+        background: linear-gradient(135deg, #c9c0bb, #f2f3f4 );
+        color: black;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .checkout-title {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 20px 0 10px;
+        color: black;
+    }
+
+    .checkout-table {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+        color: black;
+    }
+
+    .product-img {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    .input-group-text {
+        background: #ffcc00;
+        color: black;
+        border: none;
+    }
+
+    .form-control {
+        border-radius: 8px;
+    }
+
+    .total-amount {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        font-size: 22px;
+        font-weight: bold;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 20px;
+        color: black
+    }
+
+    .btn-success {
+        font-size: 20px;
+        background: linear-gradient(90deg, #27ae60, #2ecc71);
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        transition: 0.3s;
+    }
+
+        .btn-success:hover {
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            transform: scale(1.05);
+        }
+</style>

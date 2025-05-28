@@ -1,0 +1,124 @@
+﻿@model WebsiteCoffeeShop.Models.DiscountCode
+@{
+    ViewData["Title"] = "Xóa mã giảm giá";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-light rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Xác nhận xóa mã giảm giá</h6>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+        </div>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger mb-4">
+                <h6 class="alert-heading">Lỗi!</h6>
+                <p>@TempData["Error"]</p>
+            </div>
+        }
+
+        <div class="alert alert-danger mb-4">
+            <h6 class="alert-heading">Cảnh báo!</h6>
+            <p>Bạn có chắc chắn muốn xóa mã giảm giá này? Hành động này không thể hoàn tác.</p>
+            @if (Model.Orders != null && Model.Orders.Any())
+            {
+                <p class="mb-0"><strong>Lưu ý:</strong> Mã giảm giá này đã được sử dụng trong @Model.Orders.Count đơn hàng và không thể xóa.</p>
+            }
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0">Thông tin mã giảm giá</h6>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">
+                        @Html.DisplayNameFor(model => model.Code)
+                    </dt>
+                    <dd class="col-sm-9">
+                        <strong>@Html.DisplayFor(model => model.Code)</strong>
+                    </dd>
+                    <dt class="col-sm-3">
+                        @Html.DisplayNameFor(model => model.Description)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.Description)
+                    </dd>
+                    <dt class="col-sm-3">
+                        Mức giảm giá
+                    </dt>
+                    <dd class="col-sm-9">
+                        @if (Model.IsPercentage)
+                        {
+                            <span>@Model.DiscountPercent%</span>
+                        }
+                        else
+                        {
+                            <span>@Model.DiscountAmount.ToString("N0")đ</span>
+                        }
+                    </dd>
+                    <dt class="col-sm-3">
+                        Loại giảm giá
+                    </dt>
+                    <dd class="col-sm-9">
+                        @(Model.IsPercentage ? "Theo phần trăm" : "Theo số tiền cố định")
+                    </dd>
+                    <dt class="col-sm-3">
+                        @Html.DisplayNameFor(model => model.ExpiryDate)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Model.ExpiryDate.ToString("dd/MM/yyyy")
+                    </dd>
+                    <dt class="col-sm-3">
+                        Trạng thái
+                    </dt>
+                    <dd class="col-sm-9">
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-success">Hoạt động</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Vô hiệu hóa</span>
+                        }
+                    </dd>
+                    <dt class="col-sm-3">
+                        Sử dụng
+                    </dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Orders != null && Model.Orders.Any())
+                        {
+                            <span class="badge bg-warning">Đã sử dụng trong @Model.Orders.Count đơn hàng</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-info">Chưa sử dụng</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <div class="d-flex gap-2">
+                @if (Model.Orders == null || !Model.Orders.Any())
+                {
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa fa-trash"></i> Xác nhận xóa
+                    </button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-danger" disabled>
+                        <i class="fa fa-trash"></i> Không thể xóa
+                    </button>
+                }
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fa fa-arrow-left"></i> Hủy
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

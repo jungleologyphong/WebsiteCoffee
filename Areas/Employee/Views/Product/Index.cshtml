@@ -1,0 +1,321 @@
+﻿@model IEnumerable<WebsiteCoffeeShop.Models.Product>
+
+@{
+    Layout = "~/Areas/Employee/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h2 class="text-center mb-4 product-list-title">Danh sách sản phẩm</h2>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="text-end mb-3">
+            <a asp-action="Add" class="btn btn-success btn-pastel">+ Thêm sản phẩm</a>
+        </div>
+    }
+
+    <div class="product-container">
+        <div class="product-list" id="product-list">
+            @foreach (var item in Model)
+            {
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="@item.ImageUrl" alt="@item.Name">
+                    </div>
+                    <div class="product-info">
+                        <h3>@item.Name</h3>
+                        <p class="desc">@item.Description</p>
+                        <p class="price">💰 @item.Price.ToString("N0") đ</p>
+                        <p class="category">📂 Loại: @(item.Category?.Name ?? "Không có loại")</p>
+                        <p class="quantity">📦 Số lượng: <strong>@item.Quantity</strong></p>
+
+                        <div class="product-actions">
+                            <a asp-action="Display" asp-route-id="@item.Id" class="btn btn-info btn-sm btn-pastel-action">👁️ Xem</a>
+
+                            @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+                            {
+                                <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-warning btn-sm btn-pastel-action">✏️ Sửa</a>
+                            }
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <button class="btn btn-danger btn-sm btn-pastel-action delete-product" data-id="@item.Id">🗑️ Xóa</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .product-container {
+        background: linear-gradient(135deg, #f9f9f9, #eef2ff);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .product-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #ff758c, #ff7eb3, #a3bffa);
+        }
+
+    .product-list-title {
+        font-family: 'Playfair Display', serif;
+        color: #333;
+        text-transform: uppercase;
+        font-weight: bold;
+        letter-spacing: 1.5px;
+        position: relative;
+        margin-bottom: 30px;
+        text-align: center;
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.05);
+    }
+
+        .product-list-title::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, #ff758c, #ff7eb3, #a3bffa);
+            border-radius: 4px;
+        }
+
+    .product-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        padding: 15px 5px;
+    }
+
+    .btn-pastel {
+        background: linear-gradient(to right, #4ade80, #3b82f6);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+        transition: all 0.3s ease;
+    }
+
+        .btn-pastel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(to right, #22c55e, #2563eb);
+        }
+
+    .product-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-align: center;
+        padding: 20px;
+        border: none;
+        position: relative;
+    }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+            .product-card:hover .product-image img {
+                transform: scale(1.05);
+            }
+
+    .product-image {
+        margin-bottom: 15px;
+        overflow: hidden;
+        border-radius: 10px;
+        background-color: #f8fafc;
+        padding: 10px;
+    }
+
+        .product-image img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            transition: transform 0.5s ease;
+        }
+
+    .product-info h3 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .product-info .desc {
+        font-size: 14px;
+        color: #64748b;
+        min-height: 40px;
+        margin-bottom: 15px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .product-info .price {
+        font-size: 18px;
+        color: #ef4444;
+        font-weight: bold;
+        margin-bottom: 12px;
+        position: relative;
+        display: inline-block;
+    }
+
+        .product-info .price::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background-color: #fee2e2;
+        }
+
+    .product-info .category, .product-info .quantity {
+        font-size: 14px;
+        color: #64748b;
+        margin-bottom: 8px;
+    }
+
+    .product-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 15px;
+    }
+
+    .btn-pastel-action {
+        border-radius: 20px;
+        padding: 6px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.05);
+    }
+
+        .btn-pastel-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+    .btn-info.btn-pastel-action {
+        background-color: #93c5fd;
+        color: #1e40af;
+        border: none;
+    }
+
+        .btn-info.btn-pastel-action:hover {
+            background-color: #60a5fa;
+        }
+
+    .btn-warning.btn-pastel-action {
+        background-color: #fcd34d;
+        color: #92400e;
+        border: none;
+    }
+
+        .btn-warning.btn-pastel-action:hover {
+            background-color: #fbbf24;
+        }
+
+    .btn-danger.btn-pastel-action {
+        background-color: #fda4af;
+        color: #9f1239;
+        border: none;
+    }
+
+        .btn-danger.btn-pastel-action:hover {
+            background-color: #fb7185;
+        }
+
+    {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .product-container {
+        padding: 20px 15px;
+    }
+
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Thêm event listener cho các nút xóa
+        document.querySelectorAll('.delete-product').forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-id');
+
+                if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
+                    deleteProduct(productId);
+                }
+            });
+        });
+
+        // Hàm xóa sản phẩm sử dụng Fetch API
+        function deleteProduct(id) {
+            // Lấy anti-forgery token từ form hoặc meta tag (nếu có)
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            fetch(`/Product/Delete/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token || '' // Thêm token nếu có
+                },
+                credentials: 'same-origin' // Quan trọng để gửi cookies bao gồm authentication
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Lỗi khi xóa sản phẩm');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Tìm và xóa card sản phẩm khỏi DOM
+                    const productCard = document.querySelector(`.delete-product[data-id="${id}"]`).closest('.product-card');
+                    productCard.remove();
+
+                    // Hiển thị thông báo thành công (có thể thêm thư viện toast notification)
+                    alert('Xóa sản phẩm thành công!');
+                } else {
+                    alert(data.message || 'Có lỗi xảy ra khi xóa sản phẩm.');
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi:', error);
+                alert('Có lỗi xảy ra khi xóa sản phẩm.');
+            });
+        }
+    });
+</script>

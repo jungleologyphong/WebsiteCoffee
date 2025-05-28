@@ -1,0 +1,13 @@
+﻿@model WebsiteCoffeeShop.Models.Category
+<h2>Bạn có chắc chắn muốn xóa danh mục này?</h2>
+
+<div>
+    <h4>ID: @Model.Id</h4>
+    <h4>Tên danh mục: @Model.Name</h4>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>

@@ -1,0 +1,149 @@
+﻿@model IEnumerable<WebsiteCoffeeShop.Models.Product>
+
+@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+
+<section class="py-3">
+    <div class="container px-5" style="margin-top: 10px;">
+        <h2 class="text-white text-center py-3 fw-bold rounded shadow-sm"
+            style="background: linear-gradient(90deg, #D2691E, #8B4513);
+           border-radius: 10px;
+           box-shadow: 0px 3px 6px rgba(0,0,0,0.2);
+           max-width: 850px;
+           margin: auto;
+           font-size: 28px;
+           padding: 12px 20px;">
+            🚵 Cửa hàng bán xe máy
+        </h2>
+
+        <div class="product-container border rounded-3 shadow-sm p-4">
+            <div class="d-flex justify-content-end my-3">
+                <select id="sortSelect" class="form-select w-25">
+                    <option value="default">Sắp xếp theo</option>
+                    <option value="price-asc">Giá tăng dần</option>
+                    <option value="price-desc">Giá giảm dần</option>
+                    <option value="name-asc">Tên A-Z</option>
+                    <option value="name-desc">Tên Z-A</option>
+                </select>
+            </div>
+
+            <div class="row gx-4 gy-5 justify-content-center" id="productContainer">
+                @foreach (var item in Model)
+                {
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 product-item"
+                         data-price="@item.Price" data-name="@item.Name">
+                        <div class="card product-card border rounded-3 shadow-sm">
+                            <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name"
+                                 style="height: 210px; object-fit: cover; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                            <div class="card-body text-center d-flex flex-column justify-content-between">
+                                <h5 class="card-title text-dark fw-bold">@item.Name</h5>
+                                <p class="fw-bold text-primary fs-5">💰 Giá: @item.Price.ToString("#,##0") VND</p>
+                                <p class="desc">@item.Description</p>
+                                @if (item.Quantity > 0)
+                                {
+                                    <p class="fw-bold text-success small">✔ Còn @item.Quantity sản phẩm</p>
+                                    <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-productId="@item.Id" asp-route-quantity="1"
+                                       class="btn btn-primary text-white fw-bold shadow-sm add-to-cart">
+                                        <i class="bi-cart-fill me-1"></i> Thêm vào giỏ hàng
+                                    </a>
+                                }
+                                else
+                                {
+                                    <p class="fw-bold text-danger small">❌ Hết hàng</p>
+                                    <button class="btn btn-secondary text-white fw-bold shadow-sm" disabled>
+                                        Hết hàng
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#sortSelect").on("change", function () {
+            var sortType = $(this).val();
+            var products = $(".product-item").get();
+
+            products.sort(function (a, b) {
+                var priceA = parseInt($(a).data("price"));
+                var priceB = parseInt($(b).data("price"));
+                var nameA = $(a).data("name").toLowerCase();
+                var nameB = $(b).data("name").toLowerCase();
+
+                switch (sortType) {
+                    case "price-asc": return priceA - priceB;
+                    case "price-desc": return priceB - priceA;
+                    case "name-asc": return nameA.localeCompare(nameB);
+                    case "name-desc": return nameB.localeCompare(nameA);
+                    default: return 0;
+                }
+            });
+
+            $("#productContainer").html(products);
+        });
+    });
+</script>
+
+<style>
+    body {
+        background-color: #f4f6f9;
+    }
+
+    h2 {
+        border-radius: 10px;
+        box-shadow: 0px 3px 6px rgba(0,0,0,0.2);
+    }
+
+    /* Điều chỉnh nền danh sách sản phẩm tối hơn */
+    .product-container {
+        background: #dcdcdc; /* Màu nền tối hơn */
+        border: 2px solid #444;
+        border-radius: 12px;    
+        padding: 20px;
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3); /* Đổ bóng mạnh hơn */
+        max-width: 95%;
+        margin: auto;
+    }
+
+    .product-card {
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        transition: transform 0.3s, box-shadow 0.3s;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        background: white;
+        padding: 12px;
+        min-height: 460px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .desc {
+        min-height: 60px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+
+    .add-to-cart {
+        background: linear-gradient(90deg, #D2691E, #8B4513);
+        border: none;
+        transition: transform 0.2s, background 0.3s;
+    }
+
+        .add-to-cart:hover {
+            transform: scale(1.05);
+            background: linear-gradient(90deg, #8B4513, #5A2E0A);
+        }
+</style>

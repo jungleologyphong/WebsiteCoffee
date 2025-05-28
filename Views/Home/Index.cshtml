@@ -1,0 +1,287 @@
+﻿@model IEnumerable<WebsiteCoffeeShop.Models.Product>
+
+@{
+    ViewData["Title"] = "Trang chủ - Quán Cà Phê";
+}
+
+<style>
+    :root {
+        --primary-color: #6F4E37;
+        --primary-dark: #513A27;
+        --accent-color: #D4A76A;
+        --light-bg: #FAF7F2;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--light-bg);
+        color: #333;
+    }
+
+    .hero-section {
+        background: linear-gradient(135deg, #6F4E37 0%, #3C2415 100%);
+        border-radius: 8px;
+        margin: 20px 0;
+        padding: 30px;
+    }
+
+    .section-title {
+        background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+        color: white;
+        border-radius: 10px;
+        box-shadow: 0px 3px 6px rgba(0,0,0,0.2);
+        max-width: 850px;
+        margin: auto;
+        font-size: 28px;
+        padding: 12px 20px;
+        text-align: center;
+    }
+
+    .product-container {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+        margin: 25px auto;
+    }
+
+    .product-card {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: transform 0.3s;
+        margin-bottom: 20px;
+        background-color: #fff;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+    .product-image {
+        height: 210px;
+        overflow: hidden;
+    }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+    .product-card:hover .product-image img {
+        transform: scale(1.05);
+    }
+
+    .card-body {
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: space-between;
+    }
+
+    .card-title {
+        font-weight: 600;
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: var(--primary-dark);
+    }
+
+    .price {
+        color: var(--accent-color);
+        font-weight: 700;
+        font-size: 18px;
+    }
+
+    .product-description {
+        min-height: 60px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        color: #666;
+        font-size: 14px;
+        margin: 10px 0;
+    }
+
+    .stock-status {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 8px 0;
+    }
+
+    .in-stock {
+        color: #28a745;
+    }
+
+    .out-of-stock {
+        color: #dc3545;
+    }
+
+    .add-to-cart {
+        background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+        border: none;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 5px;
+        font-weight: 600;
+        transition: transform 0.2s, background 0.3s;
+    }
+
+        .add-to-cart:hover {
+            transform: scale(1.05);
+            background: linear-gradient(90deg, var(--primary-dark), #2A1E13);
+        }
+
+    .sort-control {
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
+        padding: 8px 15px;
+        font-size: 14px;
+        color: #495057;
+        background-color: #fff;
+        outline: none;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+        .sort-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.2rem rgba(212, 167, 106, 0.25);
+        }
+
+    .coffee-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: var(--accent-color);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+</style>
+
+<!-- Hero section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 text-white fw-bold">Hương Vị Cà Phê</h1>
+                <p class="text-white">Trải nghiệm những tách cà phê tươi ngon, được chọn lọc kỹ lưỡng từ những hạt cà phê chất lượng cao</p>
+                <div class="d-inline-block px-3 py-2 bg-white rounded-3 text-primary fw-bold" style="color: var(--primary-color) !important;">
+                    Giao hàng miễn phí cho đơn hàng trên 200K
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="/Images/coffee-hero.jpg"
+                     alt="Cà phê phin Việt Nam" class="img-fluid rounded shadow" style="max-height: 300px;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="py-4">
+    <div class="container">
+        <h2 class="section-title mb-4">
+            ☕ Quán Cà Phê Việt
+        </h2>
+
+        <div class="product-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="m-0">Thực đơn cà phê</h3>
+                <select id="sortSelect" class="sort-control">
+                    <option value="default">Sắp xếp theo</option>
+                    <option value="price-asc">Giá tăng dần</option>
+                    <option value="price-desc">Giá giảm dần</option>
+                    <option value="name-asc">Tên A-Z</option>
+                    <option value="name-desc">Tên Z-A</option>
+                </select>
+            </div>
+
+            <div class="row g-4" id="productContainer">
+                @foreach (var item in Model)
+                {
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 product-item"
+                         data-price="@item.Price" data-name="@item.Name">
+                        <div class="product-card h-100">
+                            @if (item.Name.Contains("Đặc biệt") || item.Name.Contains("Premium"))
+                            {
+                                <span class="coffee-badge">Premium</span>
+                            }
+                            <div class="product-image">
+                                <img src="@item.ImageUrl" alt="@item.Name">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Name</h5>
+                                <p class="price">💰 @item.Price.ToString("#,##0") VND</p>
+                                <p class="product-description">@item.Description</p>
+                                <div class="mt-auto">
+                                    @if (item.Quantity > 0)
+                                    {
+                                        <p class="stock-status in-stock">
+                                            <i class="bi bi-check-circle-fill"></i> Còn hàng
+                                        </p>
+                                        <a asp-controller="ShoppingCart" asp-action="AddToCart"
+                                           asp-route-productId="@item.Id" asp-route-quantity="1"
+                                           class="btn add-to-cart w-100">
+                                            <i class="bi bi-cup-hot-fill me-1"></i> Đặt ngay
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <p class="stock-status out-of-stock">
+                                            <i class="bi bi-x-circle-fill"></i> Tạm hết
+                                        </p>
+                                        <button class="btn btn-secondary w-100" disabled>
+                                            Tạm hết
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Fix image fallback
+        $("img").on("error", function() {
+            $(this).attr("src", "/images/coffee-placeholder.jpg");
+        });
+
+        $("#sortSelect").on("change", function () {
+            var sortType = $(this).val();
+            var products = $(".product-item").get();
+
+            products.sort(function (a, b) {
+                var priceA = parseInt($(a).data("price"));
+                var priceB = parseInt($(b).data("price"));
+                var nameA = $(a).data("name").toLowerCase();
+                var nameB = $(b).data("name").toLowerCase();
+
+                switch (sortType) {
+                    case "price-asc": return priceA - priceB;
+                    case "price-desc": return priceB - priceA;
+                    case "name-asc": return nameA.localeCompare(nameB);
+                    case "name-desc": return nameB.localeCompare(nameA);
+                    default: return 0;
+                }
+            });
+
+            $("#productContainer").html(products);
+        });
+    });
+</script>

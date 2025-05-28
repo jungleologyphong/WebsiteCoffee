@@ -1,0 +1,161 @@
+﻿@model WebsiteCoffeeShop.DTO.OrderStatisticDTO
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Tạo khoảng cách và bóng cho các card */
+    .stat-card {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        padding: 20px;
+        background: #ffffff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 100%;
+    }
+
+        .stat-card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+        }
+
+    .stat-header {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 5px;
+    }
+
+    .stat-list li {
+        font-size: 1.05rem;
+        margin-bottom: 8px;
+        color: #555;
+    }
+
+    .table thead {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f1f9ff;
+    }
+</style>
+@section Scripts {
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+    <script>
+        window.onload = function () {
+            var orderByStatusChart = new CanvasJS.Chart("orderStatus", {
+                theme: "light2",
+                animationEnabled: true,
+                exportEnabled: true,
+                title: {
+                    text: "Đơn hàng theo trạng thái",
+                    fontSize: 21
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 160,
+                    toolTipContent: "<b>{label}</b>: {y}",
+                    indexLabel: "{label} - {y}",
+                    dataPoints: @Html.Raw(ViewBag.OrderByStatus)
+                }]
+            });
+            var revenueChart = new CanvasJS.Chart("revenueChartContainer", {
+                animationEnabled: true,
+                theme: "light2",
+                title: {
+                    text: "Doanh thu 7 ngày gần nhất"
+                },
+                axisX: {
+                    title: "Ngày",
+                    interval: 1
+                },
+                axisY: {
+                    title: "Doanh thu (VNĐ)",
+                    prefix: "₫"
+                },
+                data: [{
+                    type: "column", // Hoặc "line"
+                    indexLabelFontColor: "#5A5757",
+                    indexLabelPlacement: "outside",
+                    dataPoints: @Html.Raw(ViewBag.RevenuePoints)
+                }]
+             });
+             var topProductsChart = new CanvasJS.Chart("topProductsChart", {
+                animationEnabled: true,
+                exportEnabled: true,
+                theme: "light2",
+                title: {
+                    text: "Top 5 sản phẩm bán chạy"
+                },
+                axisX: {
+                    title: "Số lượng bán"
+                },
+                axisY: {
+                    title: "Sản phẩm",
+                    reversed: true
+                },
+                data: [{
+                    type: "bar",
+                    dataPoints: @Html.Raw(ViewBag.TopProductPoints)
+                }]
+            });
+            topProductsChart.render();
+            orderByStatusChart.render();
+            revenueChart.render();
+        }
+    </script>
+}
+<div class="container my-4">
+    <h2 class="mb-4 text-primary">📊 Thống kê đơn hàng</h2>
+
+    <div class="row g-4">
+        <!-- Ô 1: Tổng quan -->
+        <div class="col-md-6">
+            <div class="stat-card">
+                <h3 class="stat-header">Tổng quan</h3>
+                <ul class="stat-list list-unstyled">
+                    <li><strong>Tổng đơn hàng:</strong> @Model.TotalOrders</li>
+                    <li><strong>Tổng doanh thu:</strong> @Model.TotalRevenue.ToString("C")</li>
+                    <li><strong>Đơn hàng hôm nay:</strong> @Model.OrdersToday</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Ô 2: Đơn hàng theo trạng thái -->
+        <div class="col-md-6">
+            <div class="stat-card">
+                <h3 class="stat-header">Đơn hàng theo trạng thái</h3>
+                <div id="orderStatus" style="height: 370px; width: 100%;"></div>
+
+
+                <ul class="stat-list list-unstyled">
+                    @foreach (var item in Model.OrderByStatus)
+                    {
+                        <li>@item.Key: <span class="badge bg-primary">@item.Value</span></li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <!-- Ô 3: Doanh thu 7 ngày -->
+        <div class="col-md-6">
+            <div class="stat-card">
+                <h3 class="stat-header">Doanh thu 7 ngày gần nhất</h3>
+                <div id="revenueChartContainer" style="height: 370px; width: 100%; margin-top: 40px;"></div>
+
+            </div>
+        </div>
+
+        <!-- Ô 4: Top 5 sản phẩm bán chạy -->
+        <div class="col-md-6">
+            <div class="stat-card">
+                <h3 class="stat-header">Top 5 sản phẩm bán chạy</h3>
+                <div id="topProductsChart" style="height: 370px; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,114 @@
+﻿@model WebsiteCoffeeShop.Models.DiscountCode
+@{
+    ViewData["Title"] = "Chi tiết mã giảm giá";
+    Layout = "~/Areas/Employee/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-light rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Chỉnh sửa mã giảm giá</h6>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+        </div>
+
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0">Thông tin cơ bản</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label asp-for="Code" class="form-label">Mã giảm giá</label>
+                                <input asp-for="Code" class="form-control" />
+                                <span asp-validation-for="Code" class="text-danger"></span>
+                                <small class="text-muted">Mã giảm giá dùng để nhập khi thanh toán</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Description" class="form-label">Mô tả</label>
+                                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="ExpiryDate" class="form-label">Ngày hết hạn</label>
+                                <input asp-for="ExpiryDate" class="form-control" type="date" />
+                                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                                <label asp-for="IsActive" class="form-check-label">Kích hoạt</label>
+                                <span asp-validation-for="IsActive" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0">Thiết lập giảm giá</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Loại giảm giá</label>
+                                <div class="form-check mb-2">
+                                    <input id="isPercentageTrue" asp-for="IsPercentage" class="form-check-input" type="radio" value="true" checked="@Model.IsPercentage" />
+                                    <label class="form-check-label" for="isPercentageTrue">
+                                        Theo phần trăm (%)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input id="isPercentageFalse" asp-for="IsPercentage" class="form-check-input" type="radio" value="false" checked="@(!Model.IsPercentage)" />
+                                    <label class="form-check-label" for="isPercentageFalse">
+                                        Theo số tiền cố định (đ)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div id="percentageGroup" class="mb-3" style="display: @(Model.IsPercentage ? "block" : "none")">
+                                <label asp-for="DiscountPercent" class="form-label">Phần trăm giảm giá (%)</label>
+                                <input asp-for="DiscountPercent" class="form-control" type="number" min="1" max="100" />
+                                <span asp-validation-for="DiscountPercent" class="text-danger"></span>
+                                <small class="text-muted">Nhập giá trị từ 1 đến 100</small>
+                            </div>
+
+                            <div id="amountGroup" class="mb-3" style="display: @(!Model.IsPercentage ? "block" : "none")">
+                                <label asp-for="DiscountAmount" class="form-label">Số tiền giảm giá (đ)</label>
+                                <input asp-for="DiscountAmount" class="form-control" type="number" min="1000" step="1000" />
+                                <span asp-validation-for="DiscountAmount" class="text-danger"></span>
+                                <small class="text-muted">Nhập số tiền lớn hơn 0</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('input[name="IsPercentage"]').change(function() {
+                if ($(this).val() === 'true') {
+                    $('#percentageGroup').show();
+                    $('#amountGroup').hide();
+                } else {
+                    $('#percentageGroup').hide();
+                    $('#amountGroup').show();
+                }
+            });
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

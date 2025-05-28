@@ -1,0 +1,214 @@
+﻿@model Order
+@using WebsiteCoffeeShop.Models
+
+@{
+    var cartItems = ViewData["CartItems"] as List<CartItem>;
+    // Tính tổng tiền trước khi giảm giá
+    decimal subtotal = 0;
+    if (cartItems != null && cartItems.Any())
+    {
+        subtotal = cartItems.Sum(item => item.Price * item.Quantity);
+    }
+    // Tính tổng số tiền được giảm giá
+    decimal totalDiscount = 0;
+    if (Model.DiscountFromPoints > 0)
+    {
+        totalDiscount += Model.DiscountFromPoints;
+    }
+    // Tính số tiền giảm giá từ mã giảm giá (nếu có)
+    decimal discountCodeAmount = 0;
+    if (ViewData["DiscountCodeAmount"] != null)
+    {
+        discountCodeAmount = (decimal)ViewData["DiscountCodeAmount"];
+        totalDiscount += discountCodeAmount;
+    }
+}
+
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text-center text-success mb-4">✅ Đặt hàng thành công!</h2>
+        <p class="text-center">Cảm ơn bạn đã mua hàng! Đơn hàng của bạn đang được xử lý.</p>
+
+        <!-- 🔹 Thông tin đơn hàng -->
+        <div class="mb-3">
+            <label class="form-label">📌 Mã đơn hàng:</label>
+            <input type="text" class="form-control" value="@Model.Id" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">📍 Địa chỉ giao hàng:</label>
+            <input type="text" class="form-control" value="@Model.ShippingAddress" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">📝 Ghi chú:</label>
+            <textarea class="form-control" rows="3" readonly>@Model.Notes</textarea>
+        </div>
+
+        <!-- 🔹 Chi tiết giá - Phần được cải tiến -->
+        <div class="mb-3">
+            <label class="form-label">💰 Chi tiết thanh toán:</label>
+            <div class="card">
+                <div class="card-body">
+                    <!-- Tổng tiền hàng (giá gốc) luôn hiển thị -->
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="fw-bold">Tổng tiền hàng:</span>
+                        <span class="fw-bold">@subtotal.ToString("#,##0") đ</span>
+                    </div>
+
+                    <!-- Phần giảm giá từ điểm thưởng -->
+                    @if (Model.DiscountFromPoints > 0)
+                    {
+                        <div class="d-flex justify-content-between mb-2 text-success">
+                            <span>Giảm giá từ điểm thưởng (@Model.RewardPointsUsed điểm):</span>
+                            <span>-@Model.DiscountFromPoints.ToString("#,##0") đ</span>
+                        </div>
+                    }
+
+                    <!-- Phần giảm giá từ mã giảm giá -->
+                    @if (discountCodeAmount > 0)
+                    {
+                        <div class="d-flex justify-content-between mb-2 text-success">
+                            <span>Giảm giá từ mã giảm giá:</span>
+                            <span>-@discountCodeAmount.ToString("#,##0") đ</span>
+                        </div>
+                    }
+
+                    <!-- Hiển thị tổng tiền giảm giá nếu có giảm giá -->
+                    @if (totalDiscount > 0)
+                    {
+                        <div class="d-flex justify-content-between mb-2 bg-light p-2 rounded">
+                            <span class="fw-bold text-success">Tổng tiền được giảm:</span>
+                            <span class="fw-bold text-success">-@totalDiscount.ToString("#,##0") đ</span>
+                        </div>
+
+                        <hr />
+                        <!-- Chỉ hiển thị "sau giảm giá" khi có giảm giá -->
+                        <div class="d-flex justify-content-between fw-bold bg-light p-2 rounded">
+                            <span class="fs-5">Tổng thanh toán (sau giảm giá):</span>
+                            <span class="text-danger fs-5">@Model.TotalPrice.ToString("#,##0") đ</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <!-- Khi không có giảm giá, chỉ hiển thị "Tổng thanh toán" -->
+                        <div class="d-flex justify-content-between fw-bold bg-light p-2 rounded">
+                            <span class="fs-5">Tổng thanh toán:</span>
+                            <span class="text-danger fs-5">@Model.TotalPrice.ToString("#,##0") đ</span>
+                        </div>
+                    }
+
+                    <!-- Phần điểm thưởng nhận được -->
+                    @if (Model.RewardPointsEarned > 0)
+                    {
+                        <div class="d-flex justify-content-between mt-2 text-info">
+                            <span>Điểm thưởng nhận được:</span>
+                            <span>+@Model.RewardPointsEarned điểm</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">💳 Phương thức thanh toán:</label>
+            <input type="text" class="form-control" value="@Model.PaymentMethod" readonly />
+        </div>
+
+        <!-- 🔹 Hiển thị danh sách sản phẩm đã đặt -->
+        <h4 class="text-secondary">🛍 Danh sách sản phẩm đã đặt:</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Hình ảnh</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Tổng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+                    {
+                        foreach (var item in Model.OrderDetails)
+                        {
+                            <tr>
+                                <td>@item.Product.Name</td>
+                                <td>
+                                    @{
+                                        var imagePath = item.Product.ImageUrl.StartsWith("/Images/") ?
+                                        item.Product.ImageUrl :
+                                        Url.Content("~/Images/" + item.Product.ImageUrl);
+                                    }
+                                    <img src="@imagePath" alt="@item.Product.Name"
+                                         class="img-fluid border rounded shadow"
+                                         style="width: 80px; height: 80px; object-fit: cover;">
+                                </td>
+                                <td>@item.Product.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</td>
+                                <td>@item.Quantity</td>
+                                <td>@((item.Product.Price * item.Quantity).ToString("C", new System.Globalization.CultureInfo("vi-VN")))</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-danger fw-bold">Không có sản phẩm nào</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <!-- 🔹 Nút in hóa đơn -->
+        <div class="text-center mt-4">
+            <a href="/Order/PrintInvoice/@Model.Id" class="btn btn-danger mt-3" download="HoaDon-@(Model.Id).pdf">📄 Tải hóa đơn PDF</a>
+        </div>
+        <!-- 🔹 Nút quay lại trang chủ -->
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-primary px-4 py-2">🏠 Quay lại trang chủ</a>
+        </div>
+    </div>
+</div>
+@* <script> *@
+@*     function downloadInvoice(id) { *@
+@*         const link = document.createElement('a'); *@
+@*         link.href = `/Orders/ExportInvoicePdf/${id}`; *@
+@*         link.download = `HoaDon-${id}.pdf`; *@
+@*         document.body.appendChild(link); *@
+@*         link.click(); *@
+@*         document.body.removeChild(link); *@
+@*     } *@
+@* </script> *@
+    }
+<style>
+    .card {
+        max-width: 800px;
+        margin: auto;
+        border-radius: 10px;
+        background: #f8f9fa;
+    }
+
+    .form-label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .btn-primary {
+        font-size: 18px;
+    }
+
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .order-items {
+        padding: 15px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+</style>

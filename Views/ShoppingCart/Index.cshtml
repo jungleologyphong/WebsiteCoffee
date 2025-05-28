@@ -1,0 +1,343 @@
+﻿@model WebsiteCoffeeShop.Models.ShoppingCart
+@{
+    ViewData["Title"] = "Giỏ hàng của bạn";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white py-3">
+            <h2 class="text-center mb-0 fw-bold">
+                <i class="fas fa-shopping-cart me-2"></i>Giỏ Hàng Của Bạn
+            </h2>
+        </div>
+
+        <div class="card-body p-4">
+            @if (Model.Items.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="cart-table">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="text-start">Sản phẩm</th>
+                                <th>Hình ảnh</th>
+                                <th class="text-end">Giá</th>
+                                <th class="text-center">Số lượng</th>
+                                <th class="text-end">Tổng</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr data-product-id="@item.ProductId" class="cart-item">
+                                    <td class="text-start fw-medium">@item.Name</td>
+                                    <td class="text-center">
+                                        @{
+                                            var imagePath = item.ImageUrl.StartsWith("/Images/") ? item.ImageUrl : Url.Content("~/Images/" + item.ImageUrl);
+                                        }
+                                        <img src="@imagePath" alt="@item.Name" class="product-img img-thumbnail">
+                                    </td>
+                                    <td class="item-price text-end">@item.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</td>
+                                    <td>
+                                        <div class="quantity-control mx-auto">
+                                            <button type="button" class="btn btn-outline-primary btn-sm decrease-qty" data-product-id="@item.ProductId">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <input type="text" class="form-control quantity-input" data-product-id="@item.ProductId" value="@item.Quantity" readonly>
+                                            <button type="button" class="btn btn-outline-primary btn-sm increase-qty" data-product-id="@item.ProductId">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="item-total text-end fw-bold">@((item.Price * item.Quantity).ToString("C", new System.Globalization.CultureInfo("vi-VN")))</td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-outline-danger btn-sm remove-item" data-product-id="@item.ProductId" data-bs-toggle="tooltip" title="Xóa sản phẩm">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card mt-4 border-0 bg-light">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <button type="button" class="btn btn-outline-secondary clear-cart">
+                                    <i class="fas fa-trash me-2"></i>Xóa tất cả
+                                </button>
+                                <a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary ms-2">
+                                    <i class="fas fa-arrow-left me-2"></i>Tiếp tục mua sắm
+                                </a>
+                            </div>
+                            <div class="text-end">
+                                <p class="mb-2 text-muted">Tổng thanh toán:</p>
+                                <h3 class="fw-bold text-primary" id="cart-total">
+                                    @Model.Items.Sum(i => i.Price * i.Quantity).ToString("C", new System.Globalization.CultureInfo("vi-VN"))
+                                </h3>
+                                <a asp-action="Checkout" class="btn btn-primary btn-lg mt-2">
+                                    <i class="fas fa-credit-card me-2"></i>Thanh toán ngay
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="empty-cart text-center py-5">
+                    <div class="empty-cart-icon mb-4">
+                        <i class="fas fa-shopping-cart fa-5x text-muted"></i>
+                    </div>
+                    <h3 class="text-muted mb-4">Giỏ hàng của bạn đang trống</h3>
+                    <p class="mb-4">Hãy thêm một vài sản phẩm vào giỏ hàng để tiếp tục</p>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg">
+                        <i class="fas fa-motorcycle me-2"></i>Xem sản phẩm
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="cartToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="fas fa-check-circle me-2"></i>
+                <span id="toast-message">Giỏ hàng đã được cập nhật</span>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    .card-header {
+        background: linear-gradient(135deg, #3f51b5, #1a237e);
+    }
+
+    .table-header {
+        background-color: #f8f9fa;
+        color: #3f51b5;
+        font-weight: bold;
+    }
+
+    .product-img {
+        width: 100px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        transition: transform 0.2s;
+    }
+
+        .product-img:hover {
+            transform: scale(1.1);
+        }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        max-width: 140px;
+    }
+
+    .quantity-input {
+        width: 50px;
+        text-align: center;
+        font-weight: bold;
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
+    }
+
+    .btn-outline-primary {
+        color: #3f51b5;
+        border-color: #3f51b5;
+    }
+
+        .btn-outline-primary:hover {
+            background-color: #3f51b5;
+            color: white;
+        }
+
+    .btn-primary {
+        background: #3f51b5;
+        border-color: #3f51b5;
+    }
+
+        .btn-primary:hover {
+            background: #283593;
+            border-color: #283593;
+        }
+
+    .text-primary {
+        color: #3f51b5 !important;
+    }
+
+    .cart-item {
+        transition: background-color 0.3s;
+    }
+
+        .cart-item:hover {
+            background-color: #f8f9fa;
+        }
+
+    .empty-cart-icon {
+        color: #e0e0e0;
+    }
+
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Khởi tạo tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+
+        // Toast notification
+        function showToast(message, bgClass = 'bg-success') {
+            $('#cartToast').removeClass('bg-success bg-danger bg-warning').addClass(bgClass);
+            $('#toast-message').text(message);
+            var toast = new bootstrap.Toast(document.getElementById('cartToast'));
+            toast.show();
+        }
+
+        // Format currency VND
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+        }
+
+        // Update cart total
+        function updateCartTotal() {
+            let total = 0;
+            $('.item-total').each(function () {
+                let itemTotal = parseFloat($(this).text().replace(/[^\d]/g, ''));
+                total += itemTotal;
+            });
+            $('#cart-total').text(formatCurrency(total));
+
+            // If cart is empty
+            if ($('.cart-item').length === 0) {
+                location.reload();
+            }
+        }
+
+        // Update quantity AJAX
+        function updateQuantity(productId, quantity, $row) {
+            $.ajax({
+                url: '/ShoppingCart/UpdateQuantity',
+                type: 'POST',
+                data: { productId, quantity },
+                beforeSend: function() {
+                    $row.find('.quantity-control button').prop('disabled', true);
+                },
+                success: function(response) {
+                    if (response.success) {
+                        let price = parseFloat($row.find('.item-price').text().replace(/[^\d]/g, ''));
+                        let newTotal = price * quantity;
+                        $row.find('.item-total').text(formatCurrency(newTotal));
+                        updateCartTotal();
+                        showToast('Số lượng đã được cập nhật');
+                    } else {
+                        showToast(response.message || 'Cập nhật thất bại', 'bg-danger');
+                        $row.find('.quantity-input').val(response.currentQuantity || 1);
+                    }
+                },
+                error: function() {
+                    showToast('Lỗi kết nối, vui lòng thử lại sau', 'bg-danger');
+                },
+                complete: function() {
+                    $row.find('.quantity-control button').prop('disabled', false);
+                }
+            });
+        }
+
+        // Increase quantity
+        $('.increase-qty').click(function() {
+            let $row = $(this).closest('tr');
+            let $input = $row.find('.quantity-input');
+            let quantity = parseInt($input.val()) + 1;
+            $input.val(quantity);
+            updateQuantity($(this).data('product-id'), quantity, $row);
+        });
+
+        // Decrease quantity
+        $('.decrease-qty').click(function() {
+            let $row = $(this).closest('tr');
+            let $input = $row.find('.quantity-input');
+            let quantity = parseInt($input.val()) - 1;
+            if (quantity < 1) return;
+            $input.val(quantity);
+            updateQuantity($(this).data('product-id'), quantity, $row);
+        });
+
+        // Remove item
+        $('.remove-item').click(function() {
+            let $row = $(this).closest('tr');
+            let productId = $(this).data('product-id');
+            let productName = $row.find('td:first').text();
+
+            if (confirm(`Bạn có chắc muốn xóa "${productName}" khỏi giỏ hàng?`)) {
+                $.ajax({
+                    url: '/ShoppingCart/RemoveFromCart',
+                    type: 'POST',
+                    data: { productId },
+                    beforeSend: function() {
+                        $(this).prop('disabled', true);
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            $row.fadeOut(300, function() {
+                                $(this).remove();
+                                updateCartTotal();
+                                showToast('Sản phẩm đã được xóa khỏi giỏ hàng');
+                            });
+                        } else {
+                            showToast(response.message || 'Xóa thất bại', 'bg-danger');
+                        }
+                    },
+                    error: function() {
+                        showToast('Lỗi kết nối, vui lòng thử lại sau', 'bg-danger');
+                    },
+                    complete: function() {
+                        $(this).prop('disabled', false);
+                    }
+                });
+            }
+        });
+
+        // Clear cart
+        $('.clear-cart').click(function() {
+            if (confirm('Bạn có chắc muốn xóa toàn bộ sản phẩm trong giỏ hàng?')) {
+                $.ajax({
+                    url: '/ShoppingCart/ClearCart',
+                    type: 'POST',
+                    beforeSend: function() {
+                        $(this).prop('disabled', true);
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            showToast(response.message || 'Xóa thất bại', 'bg-danger');
+                        }
+                    },
+                    error: function() {
+                        showToast('Lỗi kết nối, vui lòng thử lại sau', 'bg-danger');
+                    },
+                    complete: function() {
+                        $(this).prop('disabled', false);
+                    }
+                });
+            }
+        });
+    });
+</script>

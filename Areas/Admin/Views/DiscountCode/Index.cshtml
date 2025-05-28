@@ -1,0 +1,128 @@
+﻿@model IEnumerable<WebsiteCoffeeShop.Models.DiscountCode>
+
+@{
+    ViewData["Title"] = "Danh sách mã giảm giá";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-light rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Danh sách mã giảm giá</h6>
+            <a asp-action="Create" class="btn btn-success">
+                <i class="fa fa-plus"></i> Tạo mã giảm giá mới
+            </a>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fa fa-check-circle me-2"></i>@TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fa fa-exclamation-circle me-2"></i>@TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <div class="table-responsive">
+            <table class="table table-hover text-start align-middle table-bordered table-striped mb-0" id="discountTable">
+                <thead>
+                    <tr class="text-dark bg-light">
+                        <th>Mã giảm giá</th>
+                        <th>Mô tả</th>
+                        <th>Giảm giá</th>
+                        <th>Ngày hết hạn</th>
+                        <th>Trạng thái</th>
+                        <th style="width: 280px;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        string statusClass = item.IsActive ? "success" : "danger";
+                        string statusText = item.IsActive ? "Hoạt động" : "Vô hiệu hóa";
+                        string expiryClass = DateTime.Now > item.ExpiryDate ? "text-danger" : "";
+
+                        <tr>
+                            <td><strong>@item.Code</strong></td>
+                            <td>@item.Description</td>
+                            <td>
+                                @if (item.IsPercentage)
+                                {
+                                    <span class="badge bg-primary">@item.DiscountPercent%</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info">@item.DiscountAmount.ToString("N0")đ</span>
+                                }
+                            </td>
+                            <td class="@expiryClass">
+                                @item.ExpiryDate.ToString("dd/MM/yyyy")
+                                @if (DateTime.Now > item.ExpiryDate)
+                                {
+                                    <span class="badge bg-danger ms-1">Hết hạn</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge bg-@statusClass">@statusText</span>
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary" title="Sửa">
+                                        <i class="fa fa-edit">✏️Sửa</i>
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info" title="Chi tiết">
+                                        <i class="fa fa-eye">👁️Chi tiết</i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" title="Xóa">
+                                        <i class="fa fa-trash">
+                                            🗑️Xóa
+                                        </i>
+                                    </a>
+                                    <a asp-action="Toggle" asp-route-id="@item.Id"
+                                       class="btn btn-sm @(item.IsActive ? "btn-warning" : "btn-success")"
+                                       title="@(item.IsActive ? "Vô hiệu hóa" : "Kích hoạt")">
+                                        <i class="fa @(item.IsActive ? "fa-ban" : "fa-check")">
+                                            @(item.IsActive ? "Vô hiệu hóa" : "Kích hoạt")
+                                        </i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable for better user experience
+            $('#discountTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json'
+                },
+                "responsive": true,
+                "lengthChange": true,
+                "autoWidth": false,
+                "pageLength": 10,
+                "columnDefs": [
+                    { "orderable": false, "targets": 5 } // Disable sorting on action column
+                ]
+            });
+
+            // Auto close alerts after 3 seconds
+            setTimeout(function() {
+                $('.alert').alert('close');
+            }, 3000);
+        });
+    </script>
+}

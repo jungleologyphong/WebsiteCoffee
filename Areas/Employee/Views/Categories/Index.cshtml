@@ -1,0 +1,42 @@
+﻿@model IEnumerable<WebsiteCoffeeShop.Models.Category>
+
+@{
+    ViewData["Title"] = "Danh sách danh mục";
+}
+
+<h2>Danh sách danh mục</h2>
+
+<!-- Chỉ Admin mới thấy nút "Thêm mới" -->
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Add" class="btn btn-primary">Thêm mới</a>
+}
+
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên danh mục</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model)
+        {
+            <tr>
+                <td>@category.Id</td>
+                <td>@category.Name</td>
+                <td>
+                    <a asp-action="Display" asp-route-id="@category.Id" class="btn btn-info">👁️Chi tiết</a>
+
+                    <!-- Chỉ Admin mới thấy các nút Sửa, Xóa -->
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Update" asp-route-id="@category.Id" class="btn btn-warning">✏️Sửa</a>
+                        <a asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">🗑️Xóa</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

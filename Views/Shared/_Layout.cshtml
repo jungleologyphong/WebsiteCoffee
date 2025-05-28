@@ -1,0 +1,850 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cà Phê Nhà Em - Delivery 093 156 4567</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #fa8c16;
+            --primary-light: #ffa940;
+            --primary-dark: #d46b08;
+            --accent-color: #ff4d4f;
+            --text-color: #262626;
+            --text-light: #8c8c8c;
+            --light-bg: #f5f5f5;
+            --white: #ffffff;
+            --dark-bg: #262626;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        /* Base Styles */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #ffffff;
+        }
+
+        .main-content {
+            flex: 1 0 auto;
+            padding: 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+        }
+
+        .btn {
+            border-radius: var(--border-radius);
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* Header */
+        .header-top {
+            background-color: var(--white);
+            color: var(--text-color);
+            padding: 10px 0;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            width: 100%;
+        }
+
+        .header-contact {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 15px;
+        }
+
+        .header-contact a {
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-contact a:hover {
+            color: var(--primary-color);
+        }
+
+        .main-nav {
+            background-color: var(--white);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .navbar {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-color) !important;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar-brand i {
+            font-size: 22px;
+            color: var(--primary-color);
+        }
+
+        .nav-item {
+            margin: 0 5px;
+        }
+
+        .nav-link {
+            color: var(--text-color) !important;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 16px !important;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color) !important;
+        }
+
+        .nav-link i {
+            margin-right: 5px;
+        }
+
+        /* Search */
+        .search-form {
+            position: relative;
+            margin-right: 15px;
+        }
+
+        .search-input {
+            border-radius: var(--border-radius);
+            padding: 8px 16px;
+            border: 1px solid #f0f0f0;
+            background-color: var(--light-bg);
+            transition: var(--transition);
+            width: 180px;
+            font-size: 14px;
+        }
+
+        .search-input:focus {
+            box-shadow: none;
+            border-color: var(--primary-color);
+            background-color: var(--white);
+            width: 200px;
+        }
+
+        .search-button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background: transparent;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .search-button:hover {
+            color: var(--primary-color);
+        }
+
+        /* User actions */
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .login-btn, .register-btn {
+            border-radius: var(--border-radius);
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .login-btn {
+            color: var(--text-color);
+            border: 1px solid #f0f0f0;
+            background-color: transparent;
+        }
+
+        .login-btn:hover {
+            background-color: var(--light-bg);
+            border-color: #e0e0e0;
+        }
+
+        .register-btn {
+            background-color: var(--primary-color);
+            color: var(--white) !important;
+            border: 1px solid var(--primary-color);
+        }
+
+        .register-btn:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        .cart-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .cart-btn:hover {
+            background-color: var(--primary-light);
+            color: var(--white);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--accent-color);
+            color: var(--white);
+            font-size: 10px;
+            font-weight: 600;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Dropdown */
+        .dropdown-menu {
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: none;
+            padding: 12px 0;
+            min-width: 200px;
+        }
+
+        .dropdown-item {
+            padding: 8px 20px;
+            font-size: 14px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dropdown-item:hover {
+            background-color: rgba(250, 140, 22, 0.1);
+            color: var(--primary-color);
+        }
+
+        .dropdown-divider {
+            margin: 8px 0;
+        }
+
+        /* Role badges */
+        .role-badge {
+            display: inline-block;
+            padding: 3px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 30px;
+            margin-left: 8px;
+        }
+
+        .role-admin {
+            background-color: #ff4d4f;
+            color: white;
+        }
+
+        .role-employee {
+            background-color: #1890ff;
+            color: white;
+        }
+
+        .role-customer {
+            background-color: #52c41a;
+            color: white;
+        }
+
+        /* Hero section */
+        .hero-section {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .hero-slider {
+            width: 100%;
+            height: auto;
+        }
+
+        .hero-image {
+            width: 100%;
+            display: block;
+        }
+
+        /* Product categories */
+        .category-section {
+            padding: 40px 0;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            position: relative;
+            text-align: center;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        /* Product card styling */
+        .product-card {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            margin-bottom: 25px;
+            background-color: var(--white);
+            position: relative;
+            height: 100%;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 16px;
+        }
+
+        .product-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        .product-price {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .add-to-cart {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            transition: var(--transition);
+        }
+
+        .add-to-cart:hover {
+            background-color: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .bestseller-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 10;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            padding: 50px 0 20px;
+            margin-top: auto;
+            flex-shrink: 0;
+        }
+
+        footer h5 {
+            color: var(--text-color);
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        footer p {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+            padding-left: 5px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--white);
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid #e8e8e8;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Top info bar -->
+    <div class="header-top">
+        <div class="container">
+            <div class="header-contact">
+                <a href="#"><i class="bi bi-geo-alt-fill"></i> 46 Hoàng Văn Thụ, Phường 9, Quận Phú Nhuận, TP. Hồ Chí Minh</a>
+                <a href="tel:0931564567"><i class="bi bi-telephone-fill"></i> Đặt hàng: 093 156 4567</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light main-nav">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-cup-hot-fill"></i>
+                <span>CÀ PHÊ NHÀ EM</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <!-- Common navigation items for all users -->
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Product" asp-action="Index">Cà phê</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Trà</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Chuyện Nhà</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Cửa hàng</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Tuyển dụng</a>
+                    </li>
+
+
+                </ul>
+
+                <div class="d-flex align-items-center">
+                    <form class="search-form d-flex" onsubmit="return handleSearch(event)">
+                        <input class="form-control search-input" type="text" id="searchBox" placeholder="Tìm kiếm..." autocomplete="off">
+                        <button class="search-button" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                        <ul id="suggestions" class="list-group position-absolute w-100 mt-5"></ul>
+                    </form>
+
+                    <div class="user-actions">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <div class="dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle"></i>
+                                    @UserManager.GetUserName(User)
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <span class="role-badge role-admin">Admin</span>
+                                    }
+                                    else if (User.IsInRole("Employee"))
+                                    {
+                                        <span class="role-badge role-employee">Nhân viên</span>
+                                    }
+                                    else if (User.IsInRole("Customer"))
+                                    {
+                                        <span class="role-badge role-customer">Khách hàng</span>
+                                    }
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index"><i class="bi bi-person"></i> Thông tin tài khoản</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Order" asp-action="History"><i class="bi bi-clock-history"></i> Lịch sử đơn hàng</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-area="Identity" asp-page="/Account/Logout" method="post">
+                                            <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right"></i> Đăng xuất</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a class="btn login-btn" asp-area="Identity" asp-page="/Account/Login">
+                                Đăng nhập
+                            </a>
+                            <a class="btn register-btn" asp-area="Identity" asp-page="/Account/Register">
+                                Đăng ký
+                            </a>
+                        }
+
+                        <a class="cart-btn" asp-controller="ShoppingCart" asp-action="Index">
+                            <i class="bi bi-cart"></i>
+                            <span class="cart-count">0</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <!-- Hero Banner/Slider -->
+        <section class="hero-section">
+            <div class="hero-slider">
+                <img src="/images/matcha-banner.jpg" alt="Matcha Series" class="hero-image" onerror="this.src='/api/placeholder/1400/500'; this.alt='Matcha Series';">
+            </div>
+        </section>
+
+        <div class="container">
+            @RenderBody()
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>CÀ PHÊ NHÀ EM</h5>
+                    <p>Không gian cà phê ấm cúng, thân thiện như chính ngôi nhà của bạn. Đến với chúng tôi để thưởng thức hương vị cà phê đặc trưng Việt Nam.</p>
+                    <div class="social-icons mt-4">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-youtube"></i></a>
+                        <a href="#"><i class="bi bi-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Liên hệ</h5>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="bi bi-geo-alt-fill"></i> 46 Hoàng Văn Thụ, Phường 9, Quận Phú Nhuận, TP. HCM</a></li>
+                        <li><a href="tel:0931564567"><i class="bi bi-telephone-fill"></i> Hotline: 093 156 4567</a></li>
+                        <li><a href="mailto:info@caphenhame.vn"><i class="bi bi-envelope-fill"></i> info@caphenhame.vn</a></li>
+                        <li><a href="#"><i class="bi bi-clock-fill"></i> 07:00 - 22:00 (Hàng ngày)</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Danh mục</h5>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="bi bi-cup-hot"></i> Cà phê</a></li>
+                        <li><a href="#"><i class="bi bi-cup-straw"></i> Trà sữa</a></li>
+                        <li><a href="#"><i class="bi bi-cup"></i> Trà hoa quả</a></li>
+                        <li><a href="#"><i class="bi bi-egg-fried"></i> Bánh ngọt</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Hỗ trợ</h5>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="bi bi-info-circle"></i> Về chúng tôi</a></li>
+                        <li><a href="#"><i class="bi bi-question-circle"></i> Câu hỏi thường gặp</a></li>
+                        <li><a href="#"><i class="bi bi-shield-check"></i> Chính sách bảo mật</a></li>
+                        <li><a href="#"><i class="bi bi-truck"></i> Chính sách giao hàng</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Cà Phê Nhà Em. Tất cả quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // Update cart count from session when page loads
+        $(document).ready(function() {
+            updateCartCount();
+            setupSearch();
+        });
+
+        // Function to update cart count badge
+        function updateCartCount() {
+            $.ajax({
+                url: '/ShoppingCart/GetCartCount',
+                type: 'GET',
+                success: function(count) {
+                    $('.cart-count').text(count);
+                }
+            });
+        }
+
+        // Search functionality
+        function setupSearch() {
+            $('#searchBox').on('input', function() {
+                const query = $(this).val();
+                if (query.length >= 2) {
+                    $.ajax({
+                        url: '/Product/Search',
+                        data: { query: query },
+                        success: function(products) {
+                            const suggestions = $('#suggestions');
+                            suggestions.empty();
+                            
+                            if (products.length === 0) {
+                                suggestions.append('<li class="list-group-item">Không tìm thấy sản phẩm</li>');
+                                return;
+                            }
+                            
+                            products.forEach(function(product) {
+                                suggestions.append(`
+                                    <li class="list-group-item">
+                                        <a href="/Product/Detail/${product.id}" class="d-flex align-items-center">
+                                            <img src="${product.imageUrl || '/api/placeholder/40/40'}" style="width:40px;height:40px;object-fit:cover;margin-right:10px">
+                                            <div>
+                                                <div>${product.name}</div>
+                                                <small class="text-muted">${product.formattedPrice}</small>
+                                            </div>
+                                        </a>
+                                    </li>
+                                `);
+                            });
+                            
+                            suggestions.show();
+                        }
+                    });
+                } else {
+                    $('#suggestions').empty().hide();
+                }
+            });
+
+            // Hide suggestions when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.search-form').length) {
+                    $('#suggestions').hide();
+                }
+            });
+        }
+
+        // Handle search form submission
+        function handleSearch(e) {
+            e.preventDefault();
+            const query = $('#searchBox').val();
+            if (query.length >= 2) {
+                window.location.href = `/Product/Search?query=${encodeURIComponent(query)}`;
+            }
+            return false;
+        }
+
+        // Add to cart functionality
+        $('.add-to-cart').on('click', function() {
+            const productCard = $(this).closest('.product-card');
+            const productId = productCard.data('id');
+            
+            $.ajax({
+                url: '/ShoppingCart/AddToCart',
+                type: 'POST',
+                data: { productId: productId, quantity: 1 },
+                success: function(response) {
+                    updateCartCount();
+                    
+                    // Show toast notification
+                    const toast = $(`
+                        <div class="toast position-fixed bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header bg-success text-white">
+                                <strong class="me-auto">Thành công</strong>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                Đã thêm sản phẩm vào giỏ hàng.
+                            </div>
+                        </div>
+                    `);
+                    
+                    $('body').append(toast);
+                    const bsToast = new bootstrap.Toast(toast);
+                    bsToast.show();
+                    
+                    // Remove toast after it's hidden
+                    toast.on('hidden.bs.toast', function() {
+                        $(this).remove();
+                    });
+                },
+                error: function() {
+                    // Show error toast
+                    const toast = $(`
+                        <div class="toast position-fixed bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header bg-danger text-white">
+                                <strong class="me-auto">Lỗi</strong>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.
+                            </div>
+                        </div>
+                    `);
+                    
+                    $('body').append(toast);
+                    const bsToast = new bootstrap.Toast(toast);
+                    bsToast.show();
+                    
+                    toast.on('hidden.bs.toast', function() {
+                        $(this).remove();
+                    });
+                }
+            });
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

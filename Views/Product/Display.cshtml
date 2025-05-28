@@ -1,0 +1,157 @@
+﻿@model WebsiteCoffeeShop.Models.Product
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="product-detail-card">
+        <div class="product-image">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" alt="@Model.Name">
+            }
+            else
+            {
+                <img src="~/Images/default-product.png" alt="No Image Available">
+            }
+        </div>
+
+        <div class="product-info">
+            <h2 class="product-title">@Model.Name</h2>
+            <p class="product-description">@Model.Description</p>
+            <p class="product-category">📂 Loại: @(Model.Category?.Name ?? "Không có loại")</p>
+            <p class="product-quantity">📦 Số lượng: <strong>@Model.Quantity</strong></p>
+            <p class="product-price">💰 Giá: <strong>@Model.Price.ToString("N0") đ</strong></p>
+
+            <div class="product-actions">
+                <a asp-action="Index" class="btn btn-secondary btn-pastel-action">⬅️ Quay lại</a>
+
+                @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+                {
+                    <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-warning btn-pastel-action">✏️ Sửa</a>
+                }
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-pastel-action"
+                       onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')">🗑️ Xóa</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+    /* Card chi tiết sản phẩm */
+    .product-detail-card {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        max-width: 900px;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    /* Hình ảnh sản phẩm */
+    .product-image {
+        flex: 1;
+        max-width: 300px;
+        text-align: center;
+    }
+
+        .product-image img {
+            width: 100%;
+            max-width: 250px;
+            height: auto;
+            object-fit: contain;
+            border-radius: 10px;
+            border: 1px solid #eee;
+            padding: 5px;
+            background-color: #f8f9fa;
+        }
+
+    /* Thông tin sản phẩm */
+    .product-info {
+        flex: 2;
+        min-width: 300px;
+    }
+
+    .product-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .product-description {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 15px;
+    }
+
+    .product-category, .product-quantity, .product-price {
+        font-size: 16px;
+        color: #777;
+        margin-bottom: 10px;
+    }
+
+    .product-price {
+        font-size: 18px;
+        font-weight: bold;
+        color: #ff758c;
+    }
+
+    /* Nút chức năng */
+    .product-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .btn-pastel-action {
+        border-radius: 20px;
+        padding: 7px 15px;
+        font-size: 14px;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+        .btn-pastel-action:hover {
+            transform: translateY(-2px);
+        }
+
+    .btn-secondary.btn-pastel-action {
+        background-color: #ccc;
+        color: white;
+        border: none;
+    }
+
+    .btn-warning.btn-pastel-action {
+        background-color: #ffd166;
+        color: black;
+        border: none;
+    }
+
+    .btn-danger.btn-pastel-action {
+        background-color: #ff758c;
+        color: white;
+        border: none;
+    }
+
+    .btn-warning.btn-pastel-action:hover {
+        background-color: #ffb703;
+    }
+
+    .btn-danger.btn-pastel-action:hover {
+        background-color: #e63946;
+    }
+</style>

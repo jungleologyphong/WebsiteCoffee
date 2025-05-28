@@ -1,0 +1,13 @@
+﻿@using WebsiteCoffeeShop.Extensions
+@using WebsiteCoffeeShop.Models
+@{
+    var cart = Context.Session.GetObjectFromJson<ShoppingCart>("Cart") ?? new ShoppingCart();
+    int cartCount = cart?.Items?.Sum(item => item.Quantity) ?? 0;
+}
+
+<!-- Nút Giỏ hàng trên Navbar -->
+<li class="nav-item">
+    <a class="nav-link" asp-controller="ShoppingCart" asp-action="Index">
+        🛒 Giỏ hàng <span class="badge bg-danger rounded-pill">@cartCount</span>
+    </a>
+</li>

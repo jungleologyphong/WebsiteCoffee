@@ -1,0 +1,127 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Đăng ký";
+}
+
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+    <div class="row w-100">
+        <!-- Form đăng ký -->
+        <div class="col-lg-6 mx-auto">
+            <div class="card shadow-lg border-0 rounded-lg p-4">
+                <div class="card-header text-center bg-primary text-white py-4 rounded-top">
+                    <h3><i class="fas fa-user-plus me-2"></i> Tạo tài khoản mới</h3>
+                </div>
+                <div class="card-body">
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label asp-for="Input.FullName" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-user"></i></span>
+                                <input asp-for="Input.FullName" class="form-control" placeholder="Nhập họ và tên" autocomplete="name" />
+                            </div>
+                            <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label asp-for="Input.Email" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-envelope"></i></span>
+                                <input asp-for="Input.Email" class="form-control" placeholder="Nhập email" autocomplete="email" />
+                            </div>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label asp-for="Input.Password" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-lock"></i></span>
+                                <input asp-for="Input.Password" type="password" class="form-control" placeholder="Nhập mật khẩu" autocomplete="new-password" />
+                            </div>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="mb-3">
+                            <label asp-for="Input.ConfirmPassword" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-lock"></i></span>
+                                <input asp-for="Input.ConfirmPassword" type="password" class="form-control" placeholder="Xác nhận mật khẩu" autocomplete="new-password" />
+                            </div>
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="mb-3">
+                            <label asp-for="Input.PhoneNumber" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-phone"></i></span>
+                                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Nhập số điện thoại" autocomplete="tel" />
+                            </div>
+                            <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="mb-3">
+                            <label asp-for="Input.Address" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-map-marker-alt"></i></span>
+                                <input asp-for="Input.Address" class="form-control" placeholder="Nhập địa chỉ" autocomplete="address-line1" />
+                            </div>
+                            <span asp-validation-for="Input.Address" class="text-danger"></span>
+                        </div>
+
+                        <!-- Role -->
+                        <div class="mb-3">
+                            <label asp-for="Input.Role" class="form-label fw-bold">Vai trò</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-user-tag"></i></span>
+                                <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-select">
+                                    <option value="">-- Chọn vai trò --</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="Input.Role" class="text-danger"></span>
+                        </div>
+
+                        <!-- Nút đăng ký -->
+                        <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">
+                            <i class="fas fa-user-plus me-2"></i> Đăng ký ngay
+                        </button>
+                    </form>
+                </div>
+
+                <div class="card-footer text-center">
+                    <p class="text-muted">Đã có tài khoản? <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="text-primary">Đăng nhập ngay</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Đăng ký bằng dịch vụ bên ngoài -->
+        @if (Model.ExternalLogins?.Count > 0)
+        {
+            <div class="col-lg-6 mx-auto mt-4">
+                <div class="card shadow-lg border-0 p-4">
+                    <h5 class="text-center mb-4"><i class="fas fa-sign-in-alt me-2"></i> Hoặc đăng ký bằng</h5>
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        @foreach (var provider in Model.ExternalLogins!)
+                        {
+                            <button type="submit" class="btn btn-outline-dark w-100 mb-2" name="provider" value="@provider.Name">
+                                <i class="fas fa-sign-in-alt me-2"></i> @provider.DisplayName
+                            </button>
+                        }
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Thêm Font Awesome & Validation Scripts -->
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,134 @@
+﻿@model WebsiteCoffeeShop.Models.Order
+@using System.Globalization
+
+<div class="order-history-container">
+    <h2 class="order-title">📦 Chi tiết đơn hàng</h2>
+
+    <div class="order-card">
+        <div class="order-header">
+            <div class="order-info">
+                <p><strong>🔢 Mã đơn hàng:</strong> <span class="order-id">#@Model.Id</span></p>
+                <p><strong>👤 Tên khách hàng:</strong> @Model.ApplicationUser.FullName</p>
+                <p><strong>📅 Ngày đặt:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+                <p><strong>💰 Tổng tiền:</strong> <span class="text-danger fw-bold">@Model.TotalPrice.ToString("#,##0 VNĐ", new CultureInfo("vi-VN"))</span></p>
+                <p><strong>📍 Địa chỉ:</strong> @Model.ShippingAddress</p>
+                <p><strong>📌 Ghi chú:</strong> @(string.IsNullOrEmpty(Model.Notes) ? "Không có" : Model.Notes)</p>
+            </div>
+        </div>
+
+        <h3 class="fw-bold text-center text-dark mt-4">🛒 Sản phẩm trong đơn</h3>
+
+        <div class="product-list">
+            <table class="table product-table">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Hình ảnh</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OrderDetails)
+                    {
+                        <tr>
+                            <td>@item.Product?.Name</td>
+                            <td>
+                                <img src="@item.Product?.ImageUrl" alt="Hình ảnh" class="product-image" />
+                            </td>
+                            <td class="text-primary fw-bold">@item.Price.ToString("#,##0 VNĐ", new CultureInfo("vi-VN"))</td>
+                            <td>@item.Quantity</td>
+                            <td class="text-danger fw-bold">@((item.Quantity * item.Price).ToString("#,##0 VNĐ", new CultureInfo("vi-VN")))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-controller="Order" asp-action="History" class="btn btn-outline-dark btn-lg me-2">
+            🡸 Quay lại
+        </a>
+    </div>
+</div>
+
+<style>
+    /* Container chính */
+    .order-history-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 20px;
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .order-title {
+        text-align: center;
+        font-size: 26px;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
+    .order-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 15px;
+        background: #fefefe;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .order-header {
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+
+    .order-info p {
+        font-size: 14px;
+        color: #333;
+    }
+
+        .order-info p:first-child {
+            font-size: 16px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+    .product-table {
+        width: 90%;
+        margin: 0 auto;
+        border-radius: 8px;
+        overflow: hidden;
+        text-align: center;
+    }
+
+        .product-table th {
+            background: #2ecc71;
+            color: white;
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        .product-table td {
+            padding: 10px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+    .product-image {
+        width: 60px;
+        height: auto;
+        border-radius: 5px;
+        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn {
+        font-size: 16px;
+        font-weight: bold;
+    }
+</style>

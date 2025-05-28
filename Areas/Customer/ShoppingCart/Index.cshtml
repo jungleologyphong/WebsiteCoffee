@@ -1,0 +1,235 @@
+﻿@model WebsiteCoffeeShop.Models.ShoppingCart
+@{
+    ViewData["Title"] = "Giỏ hàng của bạn";
+}
+
+<div class="container mt-5">
+    <h2 class="text-black text-center py-4 fw-bold shadow-sm bg-light rounded">🛒 Giỏ Hàng Của Bạn</h2>
+
+    @if (Model.Items.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle" id="cart-table">
+                <thead class="table-header">
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Hình ảnh</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Tổng</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr data-product-id="@item.ProductId">
+                            <td>@item.Name</td>
+                            <td>
+                                @{
+                                    var imagePath = item.ImageUrl.StartsWith("/Images/") ? item.ImageUrl : Url.Content("~/Images/" + item.ImageUrl);
+                                }
+                                <img src="@imagePath" alt="@item.Name"
+                                     class="product-img">
+                            </td>
+                            <td class="item-price">@item.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</td>
+                            <td>
+                                <div class="input-group quantity-box">
+                                    <button class="btn btn-outline-secondary decrease-qty" data-product-id="@item.ProductId">-</button>
+                                    <input type="text" class="form-control text-center quantity-input" data-product-id="@item.ProductId" value="@item.Quantity" readonly>
+                                    <button class="btn btn-outline-secondary increase-qty" data-product-id="@item.ProductId">+</button>
+                                </div>
+                            </td>
+                            <td class="item-total">@((item.Price * item.Quantity).ToString("C", new System.Globalization.CultureInfo("vi-VN")))</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm remove-item" data-product-id="@item.ProductId">
+                                    🗑 Xóa
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-end fw-bold">Tổng cộng:</td>
+                        <td class="fw-bold text-danger" id="cart-total">
+                            @Model.Items.Sum(i => i.Price * i.Quantity).ToString("C", new System.Globalization.CultureInfo("vi-VN"))
+                        </td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-outline-danger clear-cart">
+                🗑 Xóa tất cả
+            </button>
+            <a asp-action="Checkout" class="btn btn-checkout">
+                💳 Thanh toán
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            Giỏ hàng của bạn đang trống. <a asp-controller="Home" asp-action="Index" class="alert-link">Tiếp tục mua sắm</a>!
+        </div>
+    }
+</div>
+
+<style>
+    .container {
+        max-width: 900px;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: black;
+    }
+
+    .table-header {
+        background: #ff5722;
+        color: white;
+    }
+
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+        color: black;
+    }
+
+    .product-img {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    .quantity-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .quantity-input {
+        width: 50px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .btn-outline-secondary {
+        border-color: #ff5722;
+        color: #ff5722;
+        font-weight: bold;
+    }
+
+    .btn-outline-secondary:hover {
+        background: #ff5722;
+        color: white;
+    }
+
+    .btn-danger {
+        background: #d9534f;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background: #c9302c;
+    }
+
+    .btn-checkout {
+        background: #ff5722;
+        color: white;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 10px;
+        transition: 0.3s;
+        text-decoration: none;
+    }
+
+    .btn-checkout:hover {
+        background: #e64a19;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+        }
+
+        function updateCartTotal() {
+            let total = 0;
+            $('.item-total').each(function () {
+                total += parseFloat($(this).text().replace(/[^0-9]/g, ''));
+            });
+            $('#cart-total').text(formatCurrency(total));
+        }
+
+        function updateQuantity(productId, quantity, $row) {
+            $.post('/ShoppingCart/UpdateQuantity', { productId, quantity }, function (response) {
+                if (response.success) {
+                    let price = parseFloat($row.find('.item-price').text().replace(/[^0-9]/g, ''));
+                    let newTotal = price * quantity;
+                    $row.find('.item-total').text(formatCurrency(newTotal));
+                    updateCartTotal();
+                } else {
+                    alert(response.message);
+                    location.reload();
+                }
+            }).fail(function () {
+                alert('Lỗi cập nhật số lượng!');
+                location.reload();
+            });
+        }
+
+        $('.increase-qty').click(function () {
+            let $row = $(this).closest('tr');
+            let $input = $row.find('.quantity-input');
+            let quantity = parseInt($input.val()) + 1;
+            $input.val(quantity);
+            updateQuantity($(this).data('product-id'), quantity, $row);
+        });
+
+        $('.decrease-qty').click(function () {
+            let $row = $(this).closest('tr');
+            let $input = $row.find('.quantity-input');
+            let quantity = parseInt($input.val()) - 1;
+            if (quantity < 1) return;
+            $input.val(quantity);
+            updateQuantity($(this).data('product-id'), quantity, $row);
+        });
+
+        $('.remove-item').click(function () {
+            let $row = $(this).closest('tr');
+            if (!confirm('Bạn có chắc muốn xóa sản phẩm này?')) return;
+            $.post('/ShoppingCart/RemoveFromCart', { productId: $(this).data('product-id') }, function (response) {
+                if (response.success) {
+                    $row.fadeOut(300, function () {
+                        $(this).remove();
+                        updateCartTotal();
+                    });
+                } else {
+                    alert(response.message);
+                }
+            });
+        });
+
+        $('.clear-cart').click(function () {
+            if (!confirm('Bạn có chắc muốn xóa toàn bộ giỏ hàng?')) return;
+            $.post('/ShoppingCart/ClearCart', function (response) {
+                if (response.success) {
+                    $('#cart-table tbody').empty();
+                    updateCartTotal();
+                }
+            }).fail(function () {
+                alert('Lỗi khi xóa giỏ hàng!');
+            });
+        });
+    });
+</script>

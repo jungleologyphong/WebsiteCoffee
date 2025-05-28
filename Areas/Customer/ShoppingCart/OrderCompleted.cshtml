@@ -1,0 +1,118 @@
+﻿@model Order
+@using WebsiteCoffeeShop.Models
+
+@{
+    var cartItems = ViewData["CartItems"] as List<CartItem>;
+}
+
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="text-center text-success mb-4">✅ Đặt hàng thành công!</h2>
+        <p class="text-center">Cảm ơn bạn đã mua hàng! Đơn hàng của bạn đang được xử lý.</p>
+
+        <!-- 🔹 Thông tin đơn hàng -->
+        <div class="mb-3">
+            <label class="form-label">📌 Mã đơn hàng:</label>
+            <input type="text" class="form-control" value="@Model.Id" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">📍 Địa chỉ giao hàng:</label>
+            <input type="text" class="form-control" value="@Model.ShippingAddress" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">📝 Ghi chú:</label>
+            <textarea class="form-control" rows="3" readonly>@Model.Notes</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">💰 Tổng tiền:</label>
+            <input type="text" class="form-control" value="@Model.TotalPrice.ToString("#,##0") đ" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">💳 Phương thức thanh toán:</label>
+            <input type="text" class="form-control" value="@Model.PaymentMethod" readonly />
+        </div>
+
+        <!-- 🔹 Hiển thị danh sách sản phẩm đã đặt -->
+        <h4 class="text-secondary">🛍 Danh sách sản phẩm đã đặt:</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Hình ảnh</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Tổng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (cartItems != null && cartItems.Any())
+                    {
+                        @foreach (var item in cartItems)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>
+                                    @{
+                                        var imagePath = item.ImageUrl.StartsWith("/Images/") ? item.ImageUrl : Url.Content("~/Images/" + item.ImageUrl);
+                                    }
+                                    <img src="@imagePath" alt="@item.Name"
+                                         class="img-fluid border rounded shadow"
+                                         style="width: 80px; height: 80px; object-fit: cover;">
+                                </td>
+                                <td>@item.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</td>
+                                <td>@item.Quantity</td>
+                                <td>@((item.Price * item.Quantity).ToString("C", new System.Globalization.CultureInfo("vi-VN")))</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-danger fw-bold">Không có sản phẩm nào</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 🔹 Nút quay lại trang chủ -->
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-primary px-4 py-2">🏠 Quay lại trang chủ</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        max-width: 800px;
+        margin: auto;
+        border-radius: 10px;
+        background: #f8f9fa;
+    }
+
+    .form-label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .btn-primary {
+        font-size: 18px;
+    }
+
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .order-items {
+        padding: 15px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+</style>

@@ -1,0 +1,137 @@
+﻿@model WebsiteCoffeeShop.Models.DiscountCode
+
+@{
+    ViewData["Title"] = "Tạo mã giảm giá mới";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-light rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Tạo mã giảm giá mới</h6>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Code" class="control-label">Mã giảm giá</label>
+                                <input asp-for="Code" class="form-control" placeholder="Nhập mã giảm giá (ví dụ: SUMMER2025)" />
+                                <span asp-validation-for="Code" class="text-danger"></span>
+                                <small class="form-text text-muted">Mã giảm giá nên viết hoa và không có khoảng trắng</small>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label asp-for="Description" class="control-label">Mô tả</label>
+                                <textarea asp-for="Description" class="form-control" placeholder="Nhập mô tả chi tiết cho mã giảm giá"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label class="control-label">Loại giảm giá</label>
+                                <div class="form-check">
+                                    <input type="radio" id="isPercentage" name="IsPercentage" value="true" class="form-check-input" checked />
+                                    <label class="form-check-label" for="isPercentage">Giảm theo phần trăm (%)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" id="isAmount" name="IsPercentage" value="false" class="form-check-input" />
+                                    <label class="form-check-label" for="isAmount">Giảm theo số tiền cố định (VNĐ)</label>
+                                </div>
+                            </div>
+
+                            <div id="percentageGroup" class="form-group mb-3">
+                                <label asp-for="DiscountPercent" class="control-label">Phần trăm giảm giá (%)</label>
+                                <input asp-for="DiscountPercent" class="form-control" type="number" min="1" max="100" placeholder="Nhập số (%) giảm giá" />
+                                <span asp-validation-for="DiscountPercent" class="text-danger"></span>
+                            </div>
+
+                            <div id="amountGroup" class="form-group mb-3" style="display: none;">
+                                <label asp-for="DiscountAmount" class="control-label">Số tiền giảm giá (VNĐ)</label>
+                                <input asp-for="DiscountAmount" class="form-control" type="number" min="1000" step="1000" placeholder="Nhập số tiền giảm giá" />
+                                <span asp-validation-for="DiscountAmount" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="ExpiryDate" class="control-label">Ngày hết hạn</label>
+                                <input asp-for="ExpiryDate" class="form-control" type="date" id="ExpiryDate" />
+                                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label class="control-label">Trạng thái</label>
+                                <div class="form-check form-switch">
+                                    <input asp-for="IsActive" class="form-check-input" type="checkbox" checked />
+                                    <label class="form-check-label" asp-for="IsActive">Hoạt động</label>
+                                </div>
+                                <span asp-validation-for="IsActive" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-save"></i> Lưu lại
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fa fa-arrow-left"></i> Hủy
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Set minimum date for expiry date to today
+        document.addEventListener('DOMContentLoaded', function () {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+            var minDate = `${yyyy}-${mm}-${dd}`;
+            document.getElementById('ExpiryDate').min = minDate;
+
+            // Set default value to 7 days from now
+            var nextWeek = new Date();
+            nextWeek.setDate(nextWeek.getDate() + 7);
+            var ndd = String(nextWeek.getDate()).padStart(2, '0');
+            var nmm = String(nextWeek.getMonth() + 1).padStart(2, '0');
+            var nyyyy = nextWeek.getFullYear();
+            var defaultDate = `${nyyyy}-${nmm}-${ndd}`;
+            document.getElementById('ExpiryDate').value = defaultDate;
+
+            // Toggle discount type fields
+            const isPercentage = document.getElementById('isPercentage');
+            const isAmount = document.getElementById('isAmount');
+            const percentageGroup = document.getElementById('percentageGroup');
+            const amountGroup = document.getElementById('amountGroup');
+
+            function toggleDiscountType() {
+                if (isPercentage.checked) {
+                    percentageGroup.style.display = 'block';
+                    amountGroup.style.display = 'none';
+                } else {
+                    percentageGroup.style.display = 'none';
+                    amountGroup.style.display = 'block';
+                }
+            }
+
+            isPercentage.addEventListener('change', toggleDiscountType);
+            isAmount.addEventListener('change', toggleDiscountType);
+
+            // Initialize with default values
+            toggleDiscountType();
+        });
+    </script>
+}

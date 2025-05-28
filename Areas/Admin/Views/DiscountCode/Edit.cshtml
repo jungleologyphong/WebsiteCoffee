@@ -1,0 +1,128 @@
+﻿@model WebsiteCoffeeShop.Models.DiscountCode
+
+@{
+    ViewData["Title"] = "Chỉnh sửa mã giảm giá";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-light rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Chỉnh sửa mã giảm giá</h6>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Code" class="control-label">Mã giảm giá</label>
+                                <input asp-for="Code" class="form-control" placeholder="Nhập mã giảm giá (ví dụ: SUMMER2025)" />
+                                <span asp-validation-for="Code" class="text-danger"></span>
+                                <small class="form-text text-muted">Mã giảm giá nên viết hoa và không có khoảng trắng</small>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label asp-for="Description" class="control-label">Mô tả</label>
+                                <input asp-for="Description" class="form-control" placeholder="Mô tả mã giảm giá" />
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label class="control-label">Loại giảm giá</label>
+                                <div class="form-check">
+                                    <input asp-for="IsPercentage" class="form-check-input" type="checkbox" id="isPercentageDiscount" />
+                                    <label class="form-check-label" for="isPercentageDiscount">Giảm giá theo phần trăm</label>
+                                </div>
+                                <span asp-validation-for="IsPercentage" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-3" id="percentageGroup">
+                                <label asp-for="DiscountPercent" class="control-label">Phần trăm giảm giá (%)</label>
+                                <input asp-for="DiscountPercent" class="form-control" type="number" min="1" max="100" />
+                                <span asp-validation-for="DiscountPercent" class="text-danger"></span>
+                                <small class="form-text text-muted">Nhập giá trị từ 1 đến 100</small>
+                            </div>
+
+                            <div class="form-group mb-3" id="amountGroup">
+                                <label asp-for="DiscountAmount" class="control-label">Số tiền giảm giá (VNĐ)</label>
+                                <input asp-for="DiscountAmount" class="form-control" type="number" min="1000" step="1000" />
+                                <span asp-validation-for="DiscountAmount" class="text-danger"></span>
+                                <small class="form-text text-muted">Nhập số tiền giảm giá (ví dụ: 50000)</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="ExpiryDate" class="control-label">Ngày hết hạn</label>
+                                <input asp-for="ExpiryDate" class="form-control" type="date" />
+                                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label class="control-label">Trạng thái</label>
+                                <div class="form-check form-switch">
+                                    <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                                    <label class="form-check-label" for="IsActive">Hoạt động</label>
+                                </div>
+                                <span asp-validation-for="IsActive" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-save"></i> Lưu thay đổi
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fa fa-arrow-left"></i> Hủy
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Format the expiry date for proper display in the date input
+        document.addEventListener('DOMContentLoaded', function () {
+            var expiryDate = new Date('@Html.Raw(Json.Serialize(Model.ExpiryDate))');
+            var dd = String(expiryDate.getDate()).padStart(2, '0');
+            var mm = String(expiryDate.getMonth() + 1).padStart(2, '0');
+            var yyyy = expiryDate.getFullYear();
+            var formattedDate = yyyy + '-' + mm + '-' + dd;
+            document.getElementById('ExpiryDate').value = formattedDate;
+
+            // Initialize the discount type visibility
+            toggleDiscountFields();
+
+            // Add event listener for discount type changes
+            document.getElementById('isPercentageDiscount').addEventListener('change', toggleDiscountFields);
+        });
+
+        function toggleDiscountFields() {
+            var isPercentage = document.getElementById('isPercentageDiscount').checked;
+            var percentageGroup = document.getElementById('percentageGroup');
+            var amountGroup = document.getElementById('amountGroup');
+
+            if (isPercentage) {
+                percentageGroup.style.display = 'block';
+                amountGroup.style.display = 'none';
+            } else {
+                percentageGroup.style.display = 'none';
+                amountGroup.style.display = 'block';
+            }
+        }
+    </script>
+}

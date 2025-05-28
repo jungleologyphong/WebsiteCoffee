@@ -1,0 +1,213 @@
+﻿@model List<WebsiteCoffeeShop.Models.Order>
+@using System.Globalization
+
+<div class="history-container">
+    <!-- Lịch sử đơn hàng -->
+    <div class="order-history">
+        <h2 class="order-title">📦 Lịch sử đơn hàng</h2>
+
+        @if (Model.Any())
+        {
+            <div class="order-list">
+                @foreach (var order in Model)
+                {
+                    <div class="order-card">
+                        <!-- Header đơn hàng -->
+                        <div class="order-header">
+                            <div class="order-info">
+                                <p><strong>🔢 Mã đơn hàng:</strong> #@order.Id</p>
+                                <p><strong>📅 Ngày đặt:</strong> @order.OrderDate.ToString("dd/MM/yyyy")</p>
+                                <p><strong>💰 Tổng tiền:</strong> <span class="text-danger fw-bold">@order.TotalPrice.ToString("#,##0") VNĐ</span></p>
+                                <p><strong>📍 Địa chỉ:</strong> @order.ShippingAddress</p>
+                                <p><strong>📌 Ghi chú:</strong> @(string.IsNullOrEmpty(order.Notes) ? "Không có" : order.Notes)</p>
+                            </div>
+                            <div class="order-actions">
+                                <a href="@Url.Action("Details", "Order", new { id = order.Id })" class="btn btn-sm btn-outline-primary">
+                                    🔎 Xem chi tiết
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Danh sách sản phẩm trong đơn hàng -->
+                        <div class="product-list">
+                            <table class="table product-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sản phẩm</th>
+                                        <th>Hình ảnh</th>
+                                        <th>Giá</th>
+                                        <th>Số lượng</th>
+                                        <th>Tổng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (order.OrderDetails != null && order.OrderDetails.Any())
+                                    {
+                                        @foreach (var item in order.OrderDetails)
+                                        {
+                                            <tr>
+                                                <td>@item.Product?.Name</td>
+                                                <td>
+                                                    <img src="@item.Product?.ImageUrl" alt="Hình ảnh" class="product-image" />
+                                                </td>
+                                                <td class="text-primary fw-bold">@item.Price.ToString("#,##0") VNĐ</td>
+                                                <td class="fw-bold">@item.Quantity</td>
+                                                <td class="text-danger fw-bold">@((item.Price * item.Quantity).ToString("#,##0 VNĐ"))</td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">Không có sản phẩm nào trong đơn hàng này.</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="no-orders">
+                <i class="bi bi-inbox-fill"></i>
+                <p>Bạn chưa có đơn hàng nào.</p>
+                <a href="/" class="btn btn-primary">🏠 Tiếp tục mua sắm</a>
+            </div>
+        }
+    </div>
+
+    <!-- Sidebar hướng dẫn chuyển khoản -->
+    <div class="order-sidebar">
+        <h3>💳 Hướng dẫn thanh toán</h3>
+        <p>Vui lòng chuyển khoản vào tài khoản sau:</p>
+        <ul>
+            <li><b>Ngân hàng:</b> Vietcombank</li>
+            <li><b>Số tài khoản:</b> 1028341345</li>
+            <li><b>Chủ tài khoản:</b> CA PHE NHA EM</li>
+        </ul>
+        <a href="/" class="btn btn-dark btn-lg mt-3">🏠 Quay lại trang chủ</a>
+    </div>
+</div>
+
+<style>
+    /* Bố cục chính */
+    .history-container {
+        display: flex;
+        gap: 20px;
+        max-width: 1200px;
+        margin: 40px auto;
+    }
+
+    .order-history {
+        flex: 2;
+    }
+
+    .order-sidebar {
+        flex: 1;
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .order-title {
+        text-align: center;
+        font-size: 26px;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
+    /* Card đơn hàng */
+    .order-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 15px;
+        background: #fefefe;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+
+    .order-info p {
+        margin: 5px 0;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .btn-outline-primary {
+        font-weight: bold;
+        border: 2px solid #3498db;
+        padding: 6px 12px;
+        border-radius: 5px;
+    }
+
+        .btn-outline-primary:hover {
+            background: #2980b9;
+            color: white;
+        }
+
+    /* Bảng sản phẩm */
+    .product-table {
+        width: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+        text-align: center;
+    }
+
+        .product-table th {
+            background: #2ecc71;
+            color: white;
+            padding: 12px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .product-table td {
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+    .product-image {
+        width: 60px;
+        height: auto;
+        border-radius: 5px;
+        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Khi không có đơn hàng */
+    .no-orders {
+        text-align: center;
+        padding: 40px 0;
+    }
+
+        .no-orders i {
+            font-size: 50px;
+            color: #7f8c8d;
+        }
+
+        .no-orders p {
+            font-size: 18px;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .no-orders .btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+</style>
