@@ -10,8 +10,12 @@ using QuestPDF.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 // Cấu hình database
+// Cấu hình database dùng MySQL (qua XAMPP)
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+
 // cấu hình VN PAY
 builder.Services.Configure<VNPaySettings>(builder.Configuration.GetSection("VNPay"));
 
