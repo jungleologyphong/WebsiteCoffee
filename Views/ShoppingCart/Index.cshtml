@@ -33,30 +33,38 @@
                                     <td class="text-start fw-medium">@item.Name</td>
                                     <td class="text-center">
                                         @{
-                                            var imagePath = item.ImageUrl.StartsWith("/Images/") ? item.ImageUrl : Url.Content("~/Images/" + item.ImageUrl);
+                                            var imagePath = item.ImageUrl != "" ? item.ImageUrl :
+                                            item.ImageUrl.StartsWith("/Images/") ?
+                                            item.ImageUrl : Url.Content("~/Images/" + item.ImageUrl);
                                         }
                                         <img src="@imagePath" alt="@item.Name" class="product-img img-thumbnail">
                                     </td>
-                                    <td class="item-price text-end">@item.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</td>
-                                    <td>
-                                        <div class="quantity-control mx-auto">
-                                            <button type="button" class="btn btn-outline-primary btn-sm decrease-qty" data-product-id="@item.ProductId">
-                                                <i class="fas fa-minus"></i>
-                                            </button>
-                                            <input type="text" class="form-control quantity-input" data-product-id="@item.ProductId" value="@item.Quantity" readonly>
-                                            <button type="button" class="btn btn-outline-primary btn-sm increase-qty" data-product-id="@item.ProductId">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                    <td class="item-total text-end fw-bold">@((item.Price * item.Quantity).ToString("C", new System.Globalization.CultureInfo("vi-VN")))</td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-outline-danger btn-sm remove-item" data-product-id="@item.ProductId" data-bs-toggle="tooltip" title="Xóa sản phẩm">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
+                                    <td class="item-price text-end">@item.Price.ToString("C", new
+                                                                        System.Globalization.CultureInfo("vi-VN"))</td>
+                                                                                                               <td>
+                                                                                                                   <div class="quantity-control mx-auto">
+                                                                                                                       <button type="button" class="btn btn-outline-primary btn-sm decrease-qty"
+                                                                                                                           data-product-id="@item.ProductId">
+                                                                                                                           <i class="fas fa-minus"></i>
+                                                                                                                       </button>
+                                                                                                                       <input type="text" class="form-control quantity-input"
+                                                                                                                           data-product-id="@item.ProductId" value="@item.Quantity" readonly>
+                                                                                                                       <button type="button" class="btn btn-outline-primary btn-sm increase-qty"
+                                                                                                                           data-product-id="@item.ProductId">
+                                                                                                                           <i class="fas fa-plus"></i>
+                                                                                                                       </button>
+                                                                                                                   </div>
+                                                                                                               </td>
+                                                                                                               <td class="item-total text-end fw-bold">@((item.Price * item.Quantity).ToString("C", new
+                                                                        System.Globalization.CultureInfo("vi-VN")))</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-outline-danger btn-sm remove-item"
+                                    data-product-id="@item.ProductId" data-bs-toggle="tooltip" title="Xóa sản phẩm">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                                                }
                         </tbody>
                     </table>
                 </div>
@@ -75,16 +83,17 @@
                             <div class="text-end">
                                 <p class="mb-2 text-muted">Tổng thanh toán:</p>
                                 <h3 class="fw-bold text-primary" id="cart-total">
-                                    @Model.Items.Sum(i => i.Price * i.Quantity).ToString("C", new System.Globalization.CultureInfo("vi-VN"))
-                                </h3>
-                                <a asp-action="Checkout" class="btn btn-primary btn-lg mt-2">
-                                    <i class="fas fa-credit-card me-2"></i>Thanh toán ngay
-                                </a>
-                            </div>
+                                    @Model.Items.Sum(i => i.Price * i.Quantity).ToString("C", new
+                                    System.Globalization.CultureInfo("vi-VN"))
+                            </h3>
+                            <a asp-action="Checkout" class="btn btn-primary btn-lg mt-2">
+                                <i class="fas fa-credit-card me-2"></i>Thanh toán ngay
+                            </a>
                         </div>
                     </div>
                 </div>
-            }
+            </div>
+                        }
             else
             {
                 <div class="empty-cart text-center py-5">
@@ -103,13 +112,15 @@
 </div>
 
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="cartToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div id="cartToast" class="toast align-items-center text-white bg-success border-0" role="alert"
+        aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
             <div class="toast-body">
                 <i class="fas fa-check-circle me-2"></i>
                 <span id="toast-message">Giỏ hàng đã được cập nhật</span>
             </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
         </div>
     </div>
 </div>
@@ -135,9 +146,9 @@
         transition: transform 0.2s;
     }
 
-        .product-img:hover {
-            transform: scale(1.1);
-        }
+    .product-img:hover {
+        transform: scale(1.1);
+    }
 
     .quantity-control {
         display: flex;
@@ -159,20 +170,20 @@
         border-color: #3f51b5;
     }
 
-        .btn-outline-primary:hover {
-            background-color: #3f51b5;
-            color: white;
-        }
+    .btn-outline-primary:hover {
+        background-color: #3f51b5;
+        color: white;
+    }
 
     .btn-primary {
         background: #3f51b5;
         border-color: #3f51b5;
     }
 
-        .btn-primary:hover {
-            background: #283593;
-            border-color: #283593;
-        }
+    .btn-primary:hover {
+        background: #283593;
+        border-color: #283593;
+    }
 
     .text-primary {
         color: #3f51b5 !important;
@@ -182,14 +193,13 @@
         transition: background-color 0.3s;
     }
 
-        .cart-item:hover {
-            background-color: #f8f9fa;
-        }
+    .cart-item:hover {
+        background-color: #f8f9fa;
+    }
 
     .empty-cart-icon {
         color: #e0e0e0;
     }
-
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -236,10 +246,10 @@
                 url: '/ShoppingCart/UpdateQuantity',
                 type: 'POST',
                 data: { productId, quantity },
-                beforeSend: function() {
+                beforeSend: function () {
                     $row.find('.quantity-control button').prop('disabled', true);
                 },
-                success: function(response) {
+                success: function (response) {
                     if (response.success) {
                         let price = parseFloat($row.find('.item-price').text().replace(/[^\d]/g, ''));
                         let newTotal = price * quantity;
@@ -251,17 +261,17 @@
                         $row.find('.quantity-input').val(response.currentQuantity || 1);
                     }
                 },
-                error: function() {
+                error: function () {
                     showToast('Lỗi kết nối, vui lòng thử lại sau', 'bg-danger');
                 },
-                complete: function() {
+                complete: function () {
                     $row.find('.quantity-control button').prop('disabled', false);
                 }
             });
         }
 
         // Increase quantity
-        $('.increase-qty').click(function() {
+        $('.increase-qty').click(function () {
             let $row = $(this).closest('tr');
             let $input = $row.find('.quantity-input');
             let quantity = parseInt($input.val()) + 1;
@@ -270,7 +280,7 @@
         });
 
         // Decrease quantity
-        $('.decrease-qty').click(function() {
+        $('.decrease-qty').click(function () {
             let $row = $(this).closest('tr');
             let $input = $row.find('.quantity-input');
             let quantity = parseInt($input.val()) - 1;
@@ -280,7 +290,7 @@
         });
 
         // Remove item
-        $('.remove-item').click(function() {
+        $('.remove-item').click(function () {
             let $row = $(this).closest('tr');
             let productId = $(this).data('product-id');
             let productName = $row.find('td:first').text();
@@ -290,12 +300,12 @@
                     url: '/ShoppingCart/RemoveFromCart',
                     type: 'POST',
                     data: { productId },
-                    beforeSend: function() {
+                    beforeSend: function () {
                         $(this).prop('disabled', true);
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.success) {
-                            $row.fadeOut(300, function() {
+                            $row.fadeOut(300, function () {
                                 $(this).remove();
                                 updateCartTotal();
                                 showToast('Sản phẩm đã được xóa khỏi giỏ hàng');
@@ -304,10 +314,10 @@
                             showToast(response.message || 'Xóa thất bại', 'bg-danger');
                         }
                     },
-                    error: function() {
+                    error: function () {
                         showToast('Lỗi kết nối, vui lòng thử lại sau', 'bg-danger');
                     },
-                    complete: function() {
+                    complete: function () {
                         $(this).prop('disabled', false);
                     }
                 });
@@ -315,25 +325,25 @@
         });
 
         // Clear cart
-        $('.clear-cart').click(function() {
+        $('.clear-cart').click(function () {
             if (confirm('Bạn có chắc muốn xóa toàn bộ sản phẩm trong giỏ hàng?')) {
                 $.ajax({
                     url: '/ShoppingCart/ClearCart',
                     type: 'POST',
-                    beforeSend: function() {
+                    beforeSend: function () {
                         $(this).prop('disabled', true);
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.success) {
                             location.reload();
                         } else {
                             showToast(response.message || 'Xóa thất bại', 'bg-danger');
                         }
                     },
-                    error: function() {
+                    error: function () {
                         showToast('Lỗi kết nối, vui lòng thử lại sau', 'bg-danger');
                     },
-                    complete: function() {
+                    complete: function () {
                         $(this).prop('disabled', false);
                     }
                 });

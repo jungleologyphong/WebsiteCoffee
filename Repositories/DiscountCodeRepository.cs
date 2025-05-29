@@ -26,7 +26,7 @@ namespace WebsiteCoffeeShop.Repositories
         public async Task<DiscountCode> GetByCodeAsync(string code)
         {
             return await _context.DiscountCodes
-                .FirstOrDefaultAsync(dc => dc.Code.ToLower() == code.ToLower());
+                .FirstOrDefaultAsync(d => d.Code.ToLower() == code.ToLower());
         }
 
         public async Task AddAsync(DiscountCode discountCode)

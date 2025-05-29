@@ -37,7 +37,9 @@
                             {
                                 <div class="product-card">
                                     @{
-                                        var imagePath = item.ImageUrl.StartsWith("/Images/") ? item.ImageUrl : Url.Content("~/Images/" + item.ImageUrl);
+                                        var imagePath = item.ImageUrl != "" ? item.ImageUrl :
+                                        item.ImageUrl.StartsWith("/Images/") ?
+                                        item.ImageUrl : Url.Content("~/Images/" + item.ImageUrl);
                                     }
                                     <div class="product-img-container">
                                         <img src="@imagePath" class="product-img" alt="@item.Name">
@@ -45,13 +47,15 @@
                                     <div class="product-details">
                                         <h5 class="product-name">@item.Name</h5>
                                         <div class="product-info">
-                                            <div class="product-price">@item.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</div>
-                                            <div class="product-quantity">× @item.Quantity</div>
-                                        </div>
-                                        <div class="product-total">@((item.Price * item.Quantity).ToString("C", new System.Globalization.CultureInfo("vi-VN")))</div>
-                                    </div>
-                                </div>
-                            }
+                                            <div class="product-price">@item.Price.ToString("C", new
+                                                                                        System.Globalization.CultureInfo("vi-VN"))</div>
+                                                                                                                               <div class="product-quantity">× @item.Quantity</div>
+                                                                                                                           </div>
+                                                                                                                           <div class="product-total">@((item.Price * item.Quantity).ToString("C", new
+                                                                                System.Globalization.CultureInfo("vi-VN")))</div>
+                            </div>
+                        </div>
+                                                }
                         }
                         else
                         {
@@ -72,12 +76,14 @@
                         <h4 class="section-title"><i class="bi bi-geo-alt-fill"></i> Thông tin giao hàng</h4>
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-                            <input type="text" name="ShippingAddress" class="form-control" placeholder="Nhập địa chỉ giao hàng" required>
+                            <input type="text" name="ShippingAddress" class="form-control"
+                                placeholder="Nhập địa chỉ giao hàng" required>
                         </div>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="bi bi-chat-left-text"></i></span>
-                            <textarea name="Notes" class="form-control" placeholder="Ghi chú thêm (nếu có)" rows="2"></textarea>
+                            <textarea name="Notes" class="form-control" placeholder="Ghi chú thêm (nếu có)"
+                                rows="2"></textarea>
                         </div>
                     </div>
 
@@ -88,7 +94,8 @@
                         <div class="discount-section mb-3">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-tag"></i></span>
-                                <input type="text" id="discountCodeInput" name="DiscountCode" class="form-control" placeholder="Nhập mã giảm giá">
+                                <input type="text" id="discountCodeInput" name="DiscountCode" class="form-control"
+                                    placeholder="Nhập mã giảm giá">
                                 <button type="button" id="applyDiscountBtn" class="btn btn-accent">Áp dụng</button>
                             </div>
                             <div id="discountMessage" class="mt-2"></div>
@@ -100,9 +107,8 @@
                                     <div class="code-badges">
                                         @foreach (var code in availableDiscountCodes)
                                         {
-                                            <span class="badge bg-info text-dark discount-badge"
-                                                  data-code="@code.Code"
-                                                  title="@code.Description">
+                                            <span class="badge bg-info text-dark discount-badge" data-code="@code.Code"
+                                                title="@code.Description">
                                                 @code.Code (@code.DiscountPercent%)
                                             </span>
                                         }
@@ -115,7 +121,8 @@
                         <!-- Sử dụng điểm thưởng -->
                         <div class="reward-points-section mb-3">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="useRewardPoints" name="UseRewardPoints">
+                                <input class="form-check-input" type="checkbox" id="useRewardPoints"
+                                    name="UseRewardPoints">
                                 <label class="form-check-label" for="useRewardPoints">
                                     Sử dụng điểm thưởng (@userRewardPoints điểm)
                                 </label>
@@ -134,7 +141,8 @@
                         <div class="payment-details">
                             <div class="payment-row">
                                 <span>Tạm tính:</span>
-                                <span id="subtotal">@((cartItems != null) ? cartItems.Sum(i => i.Price * i.Quantity).ToString("#,##0") : "0") đ</span>
+                                <span id="subtotal">@((cartItems != null) ? cartItems.Sum(i => i.Price *
+                                                                        i.Quantity).ToString("#,##0") : "0") đ</span>
                             </div>
                             <div class="payment-row" id="discountRow" style="display:none;">
                                 <span>Giảm giá từ mã:</span>
@@ -146,11 +154,13 @@
                             </div>
                             <div class="payment-row total-amount">
                                 <span>Tổng tiền:</span>
-                                <span id="totalPrice">@((cartItems != null) ? cartItems.Sum(i => i.Price * i.Quantity).ToString("#,##0") : "0") đ</span>
+                                <span id="totalPrice">@((cartItems != null) ? cartItems.Sum(i => i.Price *
+                                                                        i.Quantity).ToString("#,##0") : "0") đ</span>
                             </div>
                             <div class="payment-row" id="pointsEarnedRow">
                                 <span>Điểm thưởng nhận được:</span>
-                                <span id="pointsEarned">@((cartItems != null) ? Math.Floor(cartItems.Sum(i => i.Price * i.Quantity) / 1000).ToString() : "0") điểm</span>
+                                <span id="pointsEarned">@((cartItems != null) ? Math.Floor(cartItems.Sum(i => i.Price *
+                                                                        i.Quantity) / 1000).ToString() : "0") điểm</span>
                             </div>
                         </div>
 
@@ -174,7 +184,8 @@
                                 <div class="payment-method-option">
                                     <input type="radio" id="VNPAY" name="PaymentMethod" value="VNPAY">
                                     <label for="VNPAY">
-                                        <img src="/Images/VNPAY/VNPAY.svg" alt="VNPAY" style="height: 20px; vertical-align: middle; margin-right: 5px;" />
+                                        <img src="/Images/VNPAY/VNPAY.svg" alt="VNPAY"
+                                            style="height: 20px; vertical-align: middle; margin-right: 5px;" />
                                         <span>Thanh toán VNPAY</span>
                                     </label>
                                 </div>
@@ -250,7 +261,7 @@
         align-items: center;
         gap: 0.5rem;
         padding-bottom: 0.5rem;
-        border-bottom: 2px solid rgba(0,0,0,0.1);
+        border-bottom: 2px solid rgba(0, 0, 0, 0.1);
     }
 
     /* Product list styling */
@@ -272,14 +283,14 @@
         border-radius: 10px;
         margin-bottom: 0.8rem;
         padding: 0.8rem;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         transition: transform 0.2s ease;
     }
 
-        .product-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
+    .product-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
     .product-img-container {
         width: 80px;
@@ -361,7 +372,7 @@
 
     .form-control {
         border-radius: 8px;
-        border: 1px solid rgba(0,0,0,0.1);
+        border: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .btn-accent {
@@ -379,9 +390,9 @@
         transition: transform 0.2s ease;
     }
 
-        .discount-badge:hover {
-            transform: scale(1.05);
-        }
+    .discount-badge:hover {
+        transform: scale(1.05);
+    }
 
     .code-badges {
         display: flex;
@@ -401,12 +412,12 @@
         display: flex;
         justify-content: space-between;
         padding: 0.6rem 0;
-        border-bottom: 1px dashed rgba(0,0,0,0.1);
+        border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
     }
 
-        .payment-row:last-child {
-            border-bottom: none;
-        }
+    .payment-row:last-child {
+        border-bottom: none;
+    }
 
     .total-amount {
         font-size: 1.3rem;
@@ -427,20 +438,20 @@
         align-items: center;
     }
 
-        .payment-method-option input[type="radio"] {
-            margin-right: 0.8rem;
-        }
+    .payment-method-option input[type="radio"] {
+        margin-right: 0.8rem;
+    }
 
-        .payment-method-option label {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
+    .payment-method-option label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
 
-        .payment-method-option i {
-            margin-right: 0.5rem;
-            font-size: 1.2rem;
-        }
+    .payment-method-option i {
+        margin-right: 0.5rem;
+        font-size: 1.2rem;
+    }
 
     /* Button styles */
     .btn-success {
@@ -455,16 +466,17 @@
         gap: 0.5rem;
     }
 
-        .btn-success:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
-        }
+    .btn-success:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+    }
 
     /* Đã loại bỏ phần media queries */
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Các biến theo dõi
         let subtotal = @((cartItems != null) ? cartItems.Sum(i => i.Price * i.Quantity) : 0);
         let discountPercent = 0;
@@ -518,14 +530,14 @@
         // Mã giảm giá có sẵn
         const discountBadges = document.querySelectorAll('.discount-badge');
         discountBadges.forEach(badge => {
-            badge.addEventListener('click', function() {
+            badge.addEventListener('click', function () {
                 discountCodeInput.value = this.dataset.code;
                 verifyDiscountCode(this.dataset.code);
             });
         });
 
         // Xử lý nút áp dụng mã giảm giá
-        applyDiscountBtn.addEventListener('click', function() {
+        applyDiscountBtn.addEventListener('click', function () {
             const code = discountCodeInput.value.trim();
             if (code) {
                 // Kiểm tra nếu đang áp dụng cùng một mã
@@ -539,9 +551,22 @@
             }
         });
 
+        function applyDiscount(code, id, percent, showMessage = true, customMessage = null) {
+            discountPercent = percent;
+            selectedDiscountCodeId = id;
+            selectedDiscountCodeIdInput.value = id;
+            currentDiscountCode = code;
+
+            if (showMessage) {
+                showDiscountMessage(customMessage || `Áp dụng thành công: Giảm ${percent}%`, 'success');
+            }
+
+            createCancelButton();
+            updateTotalPrice();
+        }
+
         // Xác minh mã giảm giá - Đã loại bỏ phần API và sử dụng hoàn toàn dữ liệu giả lập
-        function verifyDiscountCode(code) {
-            // Các mã giảm giá có sẵn (trong thực tế sẽ lấy từ server)
+        async function verifyDiscountCode(code) {
             const availableCodes = {
                 'WELCOME10': { id: 1, percent: 10 },
                 'SALE20': { id: 2, percent: 20 },
@@ -553,18 +578,48 @@
                 'GIAMGIA100': { id: 8, percent: 100 }
             };
 
-            // Kiểm tra xem mã có tồn tại không
-            if (availableCodes[code]) {
-                discountPercent = availableCodes[code].percent;
-                selectedDiscountCodeId = availableCodes[code].id;
-                selectedDiscountCodeIdInput.value = selectedDiscountCodeId;
-                currentDiscountCode = code; // Cập nhật mã giảm giá hiện tại
+            try {
+                const res = await axios.get(`/DiscountCode/VerifyDiscountCode?code=${code}`);
+                const data = res.data;
 
-                showDiscountMessage(`Áp dụng thành công: Giảm ${discountPercent}%`, 'success');
-                createCancelButton(); // Thêm nút hủy
-            } else {
-                showDiscountMessage('Mã giảm giá không hợp lệ hoặc đã hết hạn', 'danger');
-                // Không reset discount ở đây vì có thể đang áp dụng mã khác
+                console.log("data", data)
+
+                console.log("res", res)
+
+                if (data.success) {
+
+
+
+                    discountPercent = data.isPercentage ? data.value : 0;
+                    discountAmount = !data.isPercentage ? data.value : 0;
+                    selectedDiscountCodeId = data.id;
+
+                    selectedDiscountCodeIdInput.value = selectedDiscountCodeId;
+                    currentDiscountCode = code;
+
+                    const message = data.isPercentage
+                        ? `Áp dụng thành công: Giảm ${discountPercent}%`
+                        : `Áp dụng thành công: Giảm ${discountAmount.toLocaleString()}đ`;
+
+                    applyDiscount(code, data.id, discountPercent, true, data.message);
+                    showDiscountMessage(message, 'success');
+                    createCancelButton();
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                if (availableCodes[code]) {
+                    const fallback = availableCodes[code];
+                    discountPercent = fallback.percent;
+                    selectedDiscountCodeId = fallback.id;
+                    selectedDiscountCodeIdInput.value = selectedDiscountCodeId;
+                    currentDiscountCode = code;
+
+                    showDiscountMessage(`(Offline) Áp dụng mã ${code}: Giảm ${discountPercent}%`, 'warning');
+                    createCancelButton();
+                } else {
+                    showDiscountMessage('Mã giảm giá không hợp lệ hoặc đã hết hạn', 'danger', error.data);
+                }
             }
 
             updateTotalPrice();
@@ -588,7 +643,7 @@
         }
 
         // Xử lý checkbox sử dụng điểm thưởng
-        useRewardPointsCheckbox.addEventListener('change', function() {
+        useRewardPointsCheckbox.addEventListener('change', function () {
             const userPoints = @userRewardPoints;
 
             if (this.checked) {

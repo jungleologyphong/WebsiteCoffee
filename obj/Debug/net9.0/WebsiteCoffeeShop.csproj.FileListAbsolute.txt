@@ -1,3 +1,13 @@
+C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.csproj.AssemblyReference.cache
+C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.AssemblyInfoInputs.cache
+C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.AssemblyInfo.cs
+C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.csproj.CoreCompileInputs.cache
+C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.RazorAssemblyInfo.cache
+C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.RazorAssemblyInfo.cs
+C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.sourcelink.json
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\bin\Debug\net9.0\appsettings.json
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\bin\Debug\net9.0\WebsiteCoffeeShop.staticwebassets.runtime.json
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\bin\Debug\net9.0\WebsiteCoffeeShop.staticwebassets.endpoints.json
@@ -330,16 +340,6 @@ C:\Users\NhatPhong\Downloads\WebsiteCoffee\bin\Debug\net9.0\runtimes\win-arm64\n
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\bin\Debug\net9.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\bin\Debug\net9.0\runtimes\win-x86\native\e_sqlite3.dll
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
-C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.csproj.AssemblyReference.cache
-C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.AssemblyInfoInputs.cache
-C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.AssemblyInfo.cs
-C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.csproj.CoreCompileInputs.cache
-C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.RazorAssemblyInfo.cache
-C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.RazorAssemblyInfo.cs
-C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.sourcelink.json
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\scopedcss\bundle\WebsiteCoffeeShop.styles.css
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\scopedcss\projectbundle\WebsiteCoffeeShop.bundle.scp.css
@@ -468,6 +468,8 @@ C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\compressed\o9ivb16fq
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\compressed\90335a4ri0-9vr69e8ynj.gz
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\compressed\jeq0wmkyky-87fc7y1x7t.gz
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\compressed\bz2oqdw0tk-mlv21k5csn.gz
+C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\compressed\hweuk5cjrw-5v0stsdsxn.gz
+C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\compressed\bxmeufdl7h-5v0stsdsxn.gz
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\staticwebassets.build.json.cache
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\staticwebassets.development.json
@@ -478,5 +480,3 @@ C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\refint\WebsiteCoffee
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.pdb
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\WebsiteCoffeeShop.genruntimeconfig.cache
 C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\ref\WebsiteCoffeeShop.dll
-C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\compressed\hweuk5cjrw-5v0stsdsxn.gz
-C:\Users\NhatPhong\Downloads\WebsiteCoffee\obj\Debug\net9.0\compressed\bxmeufdl7h-5v0stsdsxn.gz
