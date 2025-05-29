@@ -77,7 +77,7 @@ namespace we.Controllers
             order.OrderDate = DateTime.UtcNow;
 
             // Tính tổng tiền từ giỏ hàng
-            decimal subTotal = cart.Items.Sum(item => item.Price * item.Quantity);
+            double subTotal = cart.Items.Sum(item => item.Price * item.Quantity);
 
             // Áp dụng giảm giá từ điểm thưởng nếu có
             if (order.RewardPointsUsed > 0)
@@ -117,7 +117,7 @@ namespace we.Controllers
                         // Áp dụng giảm giá theo phần trăm hoặc số tiền cố định
                         if (discountCode.IsPercentage)
                         {
-                            decimal discountAmount = order.TotalPrice * discountCode.DiscountPercent / 100;
+                            double discountAmount = order.TotalPrice * discountCode.DiscountPercent / 100;
                             order.TotalPrice -= discountAmount;
                         }
                         else
@@ -257,8 +257,8 @@ namespace we.Controllers
                 var discountCode = await _context.DiscountCodes.FindAsync(order.DiscountCodeId.Value);
                 if (discountCode != null)
                 {
-                    decimal subtotal = cartItems.Sum(item => item.Price * item.Quantity);
-                    decimal discountAmount = 0;
+                    double subtotal = cartItems.Sum(item => item.Price * item.Quantity);
+                    double discountAmount = 0;
 
                     // Tính số tiền giảm giá dựa trên loại giảm giá
                     if (discountCode.IsPercentage)
@@ -273,7 +273,7 @@ namespace we.Controllers
                     }
 
                     // Trừ đi giảm giá từ điểm thưởng để tính chính xác số tiền giảm từ mã giảm giá
-                    decimal adjustedSubtotal = subtotal - order.DiscountFromPoints;
+                    double adjustedSubtotal = subtotal - order.DiscountFromPoints;
                     if (discountCode.IsPercentage)
                     {
                         discountAmount = adjustedSubtotal * discountCode.DiscountPercent / 100;

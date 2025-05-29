@@ -31,7 +31,7 @@
             }
         }
 
-        public decimal TotalPrice()
+        public double TotalPrice()
         {
             return Items.Sum(i => i.Price * i.Quantity);
         }

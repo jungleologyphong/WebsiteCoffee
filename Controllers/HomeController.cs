@@ -115,22 +115,6 @@ namespace WebsiteCoffeeShop.Controllers
             return View(product);
         }
 
-        public async Task<IActionResult> Delete(int id)
-        {
-            var product = await _productRepository.GetByIdAsync(id);
-            if (product == null) return NotFound();
-            return View(product);
-        }
-
-        [HttpPost, ActionName("DeleteConfirmed")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (await _productRepository.GetByIdAsync(id) == null) return NotFound();
-            await _productRepository.DeleteAsync(id);
-            TempData["SuccessMessage"] = "Xóa sản phẩm thành công!";
-            return RedirectToAction(nameof(Index));
-        }
-
         public async Task<IActionResult> Display(int id)
         {
             var product = await _productRepository.GetByIdAsync(id);

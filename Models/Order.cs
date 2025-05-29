@@ -14,8 +14,8 @@ namespace WebsiteCoffeeShop.Models
         public int Id { get; set; }
         public string UserId { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.Now;
-        public decimal TotalPrice { get; set; }
-        public decimal DiscountFromPoints { get; set; } = 0;
+        public double TotalPrice { get; set; }
+        public double DiscountFromPoints { get; set; } = 0;
         public string ShippingAddress { get; set; }
         public string Notes { get; set; }
 

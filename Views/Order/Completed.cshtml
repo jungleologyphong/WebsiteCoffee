@@ -4,22 +4,22 @@
 @{
     var cartItems = ViewData["CartItems"] as List<CartItem>;
     // Tính tổng tiền trước khi giảm giá
-    decimal subtotal = 0;
+    double subtotal = 0;
     if (cartItems != null && cartItems.Any())
     {
         subtotal = cartItems.Sum(item => item.Price * item.Quantity);
     }
     // Tính tổng số tiền được giảm giá
-    decimal totalDiscount = 0;
+    double totalDiscount = 0;
     if (Model.DiscountFromPoints > 0)
     {
         totalDiscount += Model.DiscountFromPoints;
     }
     // Tính số tiền giảm giá từ mã giảm giá (nếu có)
-    decimal discountCodeAmount = 0;
+    double discountCodeAmount = 0;
     if (ViewData["DiscountCodeAmount"] != null)
     {
-        discountCodeAmount = (decimal)ViewData["DiscountCodeAmount"];
+        discountCodeAmount = (double)ViewData["DiscountCodeAmount"];
         totalDiscount += discountCodeAmount;
     }
 }
@@ -142,15 +142,15 @@
                                         item.Product.ImageUrl :
                                         Url.Content("~/Images/" + item.Product.ImageUrl);
                                     }
-                                    <img src="@imagePath" alt="@item.Product.Name"
-                                         class="img-fluid border rounded shadow"
-                                         style="width: 80px; height: 80px; object-fit: cover;">
-                                </td>
-                                <td>@item.Product.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</td>
-                                <td>@item.Quantity</td>
-                                <td>@((item.Product.Price * item.Quantity).ToString("C", new System.Globalization.CultureInfo("vi-VN")))</td>
-                            </tr>
-                        }
+                            <img src="@imagePath" alt="@item.Product.Name" class="img-fluid border rounded shadow"
+                                style="width: 80px; height: 80px; object-fit: cover;">
+                        </td>
+                        <td>@item.Product.Price.ToString("C", new System.Globalization.CultureInfo("vi-VN"))</td>
+                        <td>@item.Quantity</td>
+                        <td>@((item.Product.Price * item.Quantity).ToString("C", new
+                                                        System.Globalization.CultureInfo("vi-VN")))</td>
+                    </tr>
+                                        }
                     }
                     else
                     {
@@ -164,7 +164,8 @@
         </div>
         <!-- 🔹 Nút in hóa đơn -->
         <div class="text-center mt-4">
-            <a href="/Order/PrintInvoice/@Model.Id" class="btn btn-danger mt-3" download="HoaDon-@(Model.Id).pdf">📄 Tải hóa đơn PDF</a>
+            <a href="/Order/PrintInvoice/@Model.Id" class="btn btn-danger mt-3" download="HoaDon-@(Model.Id).pdf">📄 Tải
+                hóa đơn PDF</a>
         </div>
         <!-- 🔹 Nút quay lại trang chủ -->
         <div class="text-center mt-4">
@@ -182,7 +183,7 @@
 @*         document.body.removeChild(link); *@
 @*     } *@
 @* </script> *@
-    }
+}
 <style>
     .card {
         max-width: 800px;
@@ -200,7 +201,8 @@
         font-size: 18px;
     }
 
-    .table th, .table td {
+    .table th,
+    .table td {
         text-align: center;
         vertical-align: middle;
     }

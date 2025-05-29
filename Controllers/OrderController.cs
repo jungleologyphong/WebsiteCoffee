@@ -75,7 +75,7 @@ namespace WebsiteCoffeeShop.Controllers
             await _context.SaveChangesAsync();
 
             // ✅ Cộng điểm thưởng (1% tổng giá trị đơn hàng)
-            int pointsEarned = (int)(order.TotalPrice * 0.01m);
+            int pointsEarned = (int)((decimal)order.TotalPrice * 0.01m);
             user.RewardPoints += pointsEarned;
             await _userManager.UpdateAsync(user);
 
@@ -119,7 +119,7 @@ namespace WebsiteCoffeeShop.Controllers
         [HttpGet]
         public async Task<IActionResult> PrintInvoice(int id)
         {
-            
+
             var order = await _orderRepository.GetOrderByIdToPrint(id);
             if (order == null || order.ApplicationUser == null || order.OrderDetails == null || !order.OrderDetails.Any())
             {

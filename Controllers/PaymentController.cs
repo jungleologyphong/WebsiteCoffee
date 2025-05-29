@@ -21,14 +21,14 @@ namespace WebsiteCoffeeShop.Controllers
         private readonly VNPaySettings _vnPaySettings;
         private readonly ILogger<PaymentController> _logger;
         private readonly IOrderRepository _orderRepository;
-        public PaymentController(IOptions<VNPaySettings> vnPayOptions, ILogger<PaymentController> logger , IOrderRepository orderRepository)
+        public PaymentController(IOptions<VNPaySettings> vnPayOptions, ILogger<PaymentController> logger, IOrderRepository orderRepository)
         {
             _vnPaySettings = vnPayOptions.Value;
             _logger = logger;
             _orderRepository = orderRepository;
         }
         // GET: PaymentController
-        public IActionResult CreatePaymentUrl(decimal amount , int orderId)
+        public IActionResult CreatePaymentUrl(double amount, int orderId)
         {
             _logger.LogInformation("CreatePaymentUrl called with amount={Amount}, orderId={OrderId}", amount, orderId);
             var vnp_TxnRef = orderId.ToString();
@@ -36,7 +36,7 @@ namespace WebsiteCoffeeShop.Controllers
             var vnp_OrderInfo = $"Thanh toan don hang #{orderId}";
 
             var tick = DateTime.Now.Ticks.ToString();
-  
+
             var vnp_Amount = ((long)(amount * 100)).ToString(); // CHỈ CHỨA SỐ NGUYÊN
             var vnp_CreateDate = DateTime.Now.ToString("yyyyMMddHHmmss");
             var vnp_ExpireDate = DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss");

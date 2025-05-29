@@ -10,7 +10,7 @@ namespace WebsiteCoffeeShop.Models
         public string Name { get; set; }
 
         [Range(20000, 200000, ErrorMessage = "Giá phải từ 20,000 đến 200,000.")]
-        public decimal Price { get; set; }
+        public double Price { get; set; }
 
         public string Description { get; set; }
         public string? ImageUrl { get; set; }

@@ -6,7 +6,7 @@ using WebsiteCoffeeShop.Models;
 
 namespace WebsiteCoffeeShop.Controllers
 {
-    [Authorize] // Yêu cầu đăng nhập cho tất cả các action trong controller này
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly IProductRepository _productRepository;
@@ -18,14 +18,14 @@ namespace WebsiteCoffeeShop.Controllers
             _categoryRepository = categoryRepository;
         }
 
-        [AllowAnonymous] // Cho phép tất cả mọi người truy cập
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var products = await _productRepository.GetAllAsync();
             return View(products);
         }
 
-        [Authorize(Roles = SD.Role_Admin)] // Chỉ Admin mới có quyền thêm sản phẩm
+        [Authorize(Roles = SD.Role_Admin)]
         public async Task<IActionResult> Add()
         {
             ViewBag.Categories = new SelectList(await _categoryRepository.GetAllAsync(), "Id", "Name");
@@ -34,6 +34,7 @@ namespace WebsiteCoffeeShop.Controllers
 
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(Product product, IFormFile imageUrl)
         {
             if (!ModelState.IsValid)
@@ -77,6 +78,7 @@ namespace WebsiteCoffeeShop.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin,Employee")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(int id, Product product, IFormFile? imageUrl)
         {
             if (!ModelState.IsValid)
@@ -120,24 +122,21 @@ namespace WebsiteCoffeeShop.Controllers
             }
         }
 
+        [HttpPost]
         [Authorize(Roles = SD.Role_Admin)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var product = await _productRepository.GetByIdAsync(id);
-            if (product == null) return NotFound();
-            return View(product);
-        }
-
-        [HttpPost, ActionName("DeleteConfirmed")]
-        [Authorize(Roles = SD.Role_Admin)]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var product = await _productRepository.GetByIdAsync(id);
-            if (product == null) return NotFound();
+            if (product == null)
+            {
+                return Json(new { success = false, message = "Sản phẩm không tồn tại." });
+            }
 
             await _productRepository.DeleteAsync(id);
-            TempData["SuccessMessage"] = "Sản phẩm đã được xóa thành công!";
-            return RedirectToAction(nameof(Index));
+
+            return View(product);
+
         }
 
         [AllowAnonymous]
@@ -153,15 +152,15 @@ namespace WebsiteCoffeeShop.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Search(string query) // tìm kiếm sản phẩm theo từ khóa
+        public async Task<IActionResult> Search(string query)
         {
-            if (string.IsNullOrWhiteSpace(query)) // kiểm tra nếu thuộc tính query null hoặc rỗng thì trả về NotFound
+            if (string.IsNullOrWhiteSpace(query))
             {
                 return NotFound();
             }
 
-            var products = await _productRepository.SearchProductsAsync(query); // tìm kiếm sản phẩm theo từ khóa
-            return View("Index", products); // trả về danh sách sản phẩm tìm được
+            var products = await _productRepository.SearchProductsAsync(query);
+            return View("Index", products);
         }
 
         [HttpGet]

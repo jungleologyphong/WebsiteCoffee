@@ -22,7 +22,7 @@ namespace WebsiteCoffeeShop.Models
         [Required]
         public int DiscountPercent { get; set; }
 
-        public decimal DiscountAmount { get; set; } // Add this property
+        public double DiscountAmount { get; set; } // Add this property
 
         public DateTime ExpiryDate { get; set; }
 
