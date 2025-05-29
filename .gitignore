@@ -55,7 +55,6 @@ project.fragment.lock.json
 # *.nupkg
 
 # ASP.NET Core #
-wwwroot/
 node_modules/
 bower_components/
 *.db
