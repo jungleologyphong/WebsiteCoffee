@@ -245,8 +245,8 @@ namespace WebsiteCoffeeShop.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<double>("Price")
+                        .HasColumnType("double");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -294,7 +294,7 @@ namespace WebsiteCoffeeShop.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<double>("DiscountAmount")
-                        .HasColumnType("double(10,0)");
+                        .HasColumnType("double");
 
                     b.Property<int>("DiscountPercent")
                         .HasColumnType("int");
@@ -324,8 +324,8 @@ namespace WebsiteCoffeeShop.Migrations
                     b.Property<int?>("DiscountCodeId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("DiscountFromPoints")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<double>("DiscountFromPoints")
+                        .HasColumnType("double");
 
                     b.Property<string>("Notes")
                         .HasColumnType("longtext");
@@ -348,8 +348,8 @@ namespace WebsiteCoffeeShop.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("longtext");
 
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<double>("TotalPrice")
+                        .HasColumnType("double");
 
                     b.Property<string>("UserId")
                         .HasColumnType("varchar(255)");
@@ -374,8 +374,8 @@ namespace WebsiteCoffeeShop.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<double>("Price")
+                        .HasColumnType("double");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -414,8 +414,8 @@ namespace WebsiteCoffeeShop.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<double>("Price")
+                        .HasColumnType("double");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
