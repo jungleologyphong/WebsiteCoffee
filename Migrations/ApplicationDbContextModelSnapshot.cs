@@ -293,8 +293,8 @@ namespace WebsiteCoffeeShop.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<decimal>("DiscountAmount")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<double>("DiscountAmount")
+                        .HasColumnType("double(10,0)");
 
                     b.Property<int>("DiscountPercent")
                         .HasColumnType("int");

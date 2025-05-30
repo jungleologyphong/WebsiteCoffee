@@ -122,7 +122,7 @@ namespace WebsiteCoffeeShop.Migrations
                     Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DiscountPercent = table.Column<int>(type: "int", nullable: false),
-                    DiscountAmount = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    DiscountAmount = table.Column<double>(type: "double(10,0)", nullable: false),
                     ExpiryDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     IsPercentage = table.Column<bool>(type: "tinyint(1)", nullable: false)
