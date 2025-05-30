@@ -35,6 +35,8 @@ public class DiscountCodeController : ControllerBase
                 id = discount.Id,
                 code = discount.Code,
                 isPercentage = discount.IsPercentage,
+                discountPercent = discount.DiscountPercent,
+                discountAmount = discount.DiscountAmount,
                 value = discount.IsPercentage ? discount.DiscountPercent : discount.DiscountAmount
             });
         }

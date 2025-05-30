@@ -62,7 +62,7 @@
                             <div class="empty-cart">
                                 <i class="bi bi-cart-x-fill empty-cart-icon"></i>
                                 <p>Giỏ hàng trống!</p>
-                                <a href="/Products" class="btn btn-primary btn-sm">Tiếp tục mua sắm</a>
+                                <a href="/" class="btn btn-primary btn-sm">Tiếp tục mua sắm</a>
                             </div>
                         }
                     </div>
@@ -587,21 +587,33 @@
                 console.log("res", res)
 
                 if (data.success) {
-
-
-
-                    discountPercent = data.isPercentage ? data.value : 0;
-                    discountAmount = !data.isPercentage ? data.value : 0;
+                    discountPercent = data.discountPercent
+                    discountAmount = data.discountAmount
                     selectedDiscountCodeId = data.id;
-
                     selectedDiscountCodeIdInput.value = selectedDiscountCodeId;
                     currentDiscountCode = code;
-
                     const message = data.isPercentage
                         ? `Áp dụng thành công: Giảm ${discountPercent}%`
                         : `Áp dụng thành công: Giảm ${discountAmount.toLocaleString()}đ`;
 
-                    applyDiscount(code, data.id, discountPercent, true, data.message);
+                    discountAmount = subtotal * (discountPercent / 100);
+
+                    if (discountPercent > 0) {
+                        discountRow.style.display = 'flex';
+                        discountAmountElement.textContent = `-${formatCurrency(discountAmount)} đ`;
+                    } else {
+                        discountRow.style.display = 'none';
+                    }
+
+                    const totalAfterDiscount = Math.max(0, subtotal - discountAmount - rewardPointsDiscount);
+
+                    // Cập nhật hiển thị tổng tiền
+                    totalPriceElement.textContent = `${formatCurrency(totalAfterDiscount)} đ`;
+
+                    // Cập nhật điểm thưởng nhận được (1 điểm cho mỗi 1000 VND)
+                    const pointsEarned = Math.floor(totalAfterDiscount / 1000);
+                    document.getElementById('pointsEarned').textContent = `${pointsEarned} điểm`;
+
                     showDiscountMessage(message, 'success');
                     createCancelButton();
                 } else {
@@ -647,10 +659,10 @@
             const userPoints = @userRewardPoints;
 
             if (this.checked) {
-                // Tính toán số điểm có thể sử dụng (tối đa là số điểm hiện có của user)
                 const maxPointsToUse = Math.min(userPoints, Math.floor(subtotal / POINTS_VALUE));
-                const pointsToUse = maxPointsToUse > POINTS_CONVERSION_RATE ?
-                    Math.floor(maxPointsToUse / POINTS_CONVERSION_RATE) * POINTS_CONVERSION_RATE : 0;
+                const pointsToUse = maxPointsToUse > POINTS_CONVERSION_RATE
+                    ? Math.floor(maxPointsToUse / POINTS_CONVERSION_RATE) * POINTS_CONVERSION_RATE
+                    : 0;
 
                 if (pointsToUse > 0) {
                     rewardPointsToUseInput.value = pointsToUse;
@@ -679,7 +691,6 @@
             } else {
                 discountRow.style.display = 'none';
             }
-
             // Hiển thị hoặc ẩn hàng giảm giá từ điểm thưởng
             if (rewardPointsDiscount > 0) {
                 rewardPointsRow.style.display = 'flex';
